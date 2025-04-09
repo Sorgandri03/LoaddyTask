@@ -1,17 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import Homepage from "./pages/Homepage";
+import Login from "./pages/Login";
+import PrivateRoute from "./components/PrivateRoute";
+import Dashboard from "./pages/Dashboard";
+
+localStorage.setItem("isAuthenticated", "")
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <Router>
+        <div className="container mx-auto p-4">
+            <Routes>
+                <Route path="/" element={<Homepage />} />
+                <Route path="/login" element={<Login />} />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <PrivateRoute>
+                            <Dashboard />
+                        </PrivateRoute>
+                    }
+                />
+            </Routes>
+        </div>
+    </Router>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
