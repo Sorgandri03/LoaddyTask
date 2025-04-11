@@ -1,5 +1,12 @@
 /home/mich/IdeaProjects/LoaddyTask/src/main/java/it/laboratory/loaddytask/HelloController.java
 /home/mich/IdeaProjects/LoaddyTask/src/main/java/it/laboratory/loaddytask/LoaddytaskApplication.java
 /home/mich/IdeaProjects/LoaddyTask/src/main/java/it/laboratory/loaddytask/controller/ApiControllers.java
+/home/mich/IdeaProjects/LoaddyTask/src/main/java/it/laboratory/loaddytask/controller/EmployeeController.java
+/home/mich/IdeaProjects/LoaddyTask/src/main/java/it/laboratory/loaddytask/controller/EmployerController.java
+/home/mich/IdeaProjects/LoaddyTask/src/main/java/it/laboratory/loaddytask/controller/UserController.java
+/home/mich/IdeaProjects/LoaddyTask/src/main/java/it/laboratory/loaddytask/model/Employee.java
 /home/mich/IdeaProjects/LoaddyTask/src/main/java/it/laboratory/loaddytask/model/Employer.java
+/home/mich/IdeaProjects/LoaddyTask/src/main/java/it/laboratory/loaddytask/model/User.java
+/home/mich/IdeaProjects/LoaddyTask/src/main/java/it/laboratory/loaddytask/repository/EmployeeRepo.java
 /home/mich/IdeaProjects/LoaddyTask/src/main/java/it/laboratory/loaddytask/repository/EmployerRepo.java
+/home/mich/IdeaProjects/LoaddyTask/src/main/java/it/laboratory/loaddytask/repository/UserRepo.java

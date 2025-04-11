@@ -2,7 +2,7 @@ package it.laboratory.loaddytask.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "employer", schema = "loaddy")
@@ -12,77 +12,29 @@ public class Employer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    private String name;
+    @Column(nullable = true)
+    private String companyName;
 
-    @Column(nullable = false)
-    private String surname;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(nullable = false)
-    private LocalDate dateOfBirth;
+    @OneToMany(mappedBy = "employer", cascade = CascadeType.ALL)
+    private List<Team> teams;
 
-    @Column(nullable = false)
-    private String cellPhone;
+    public int getId() { return id; }
 
-    @Column(nullable = false)
-    private String email;
+    public void setId(int id) { this.id = id; }
 
-    @Column(nullable = false)
-    private String password;
+    public String getCompanyName() { return companyName; }
 
-    public int getId() {
-        return id;
-    }
+    public void setCompanyName(String companyName) { this.companyName = companyName; }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    public User getUser() { return user; }
 
-    public String getName() {
-        return name;
-    }
+    public void setUser(User user) { this.user = user; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public List<Team> getTeams() { return teams; }
 
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getCellPhone() {
-        return cellPhone;
-    }
-
-    public void setCellPhone(String cellPhone) {
-        this.cellPhone = cellPhone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public void setTeams(List<Team> teams) { this.teams = teams; }
 }

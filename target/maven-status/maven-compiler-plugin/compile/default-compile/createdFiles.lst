@@ -1,5 +1,12 @@
 it/laboratory/loaddytask/model/Employer.class
+it/laboratory/loaddytask/controller/UserController.class
+it/laboratory/loaddytask/controller/EmployerController.class
+it/laboratory/loaddytask/repository/UserRepo.class
+it/laboratory/loaddytask/model/Employee.class
+it/laboratory/loaddytask/controller/EmployeeController.class
 it/laboratory/loaddytask/LoaddytaskApplication.class
 it/laboratory/loaddytask/controller/ApiControllers.class
 it/laboratory/loaddytask/repository/EmployerRepo.class
 it/laboratory/loaddytask/HelloController.class
+it/laboratory/loaddytask/repository/EmployeeRepo.class
+it/laboratory/loaddytask/model/User.class
