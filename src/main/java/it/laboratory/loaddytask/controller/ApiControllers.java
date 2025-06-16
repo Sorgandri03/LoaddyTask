@@ -10,4 +10,9 @@ public class ApiControllers {
     public String getHome() {
         return "Hello World!";
     }
+
+    @GetMapping(value = "/api")
+        public String dioCane() {
+            return "Sei negli API!";
+        }
 }

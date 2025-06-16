@@ -19,9 +19,9 @@ const HomePage = () => {
             {/* Main content */}
             <Box sx={{ p: 4 }}>
                 <ThemeProvider theme={theme}>
-                    <Typography variant="h4">Welcome to MySite!</Typography>
+                    <Typography variant="h4">Welcome to LOADDYtask!</Typography>
                     <Typography variant="body1" sx={{ mt: 2 }}>
-                        This is the homepage.
+                        Log in to start.
                     </Typography>
                 </ThemeProvider>
             </Box>

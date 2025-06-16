@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="maven-antrun-" default="main">
   <target name="main">
-    <copy todir="/home/mich/IdeaProjects/LoaddyTask/target/classes/public">
-      <fileset dir="/home/mich/IdeaProjects/LoaddyTask/frontend/build" />
+    <copy todir="C:\Users\throa\Desktop\Uni\LABORATORY OF ADVANCED PROGRAMMING\LoaddyTask\target/classes/public">
+      <fileset dir="C:\Users\throa\Desktop\Uni\LABORATORY OF ADVANCED PROGRAMMING\LoaddyTask/frontend/build" />
     </copy>
   </target>
 </project>
