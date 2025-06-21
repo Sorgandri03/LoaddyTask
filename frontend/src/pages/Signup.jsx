@@ -6,14 +6,13 @@ import * as React from "react";
 import { sendSignup } from "../services/api";
 
 function Signup() {
-    const [username, setUsername] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [role, setRole] = React.useState("");
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        sendSignup(username, email, password).then((response) => {
+        sendSignup(email, password).then((response) => {
             if (response === false) {
                 alert("Login failed");
             } else {
@@ -39,16 +38,6 @@ function Signup() {
                         <Typography variant="h4" align="center">Sign Up</Typography>
                     </Grid>
                     <form onSubmit={handleSubmit}>
-                        <Grid sx={{marginTop: "30px"}}>
-                            <TextField
-                                id="username"
-                                label="Username"
-                                variant="outlined"
-                                type="text"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                            />
-                        </Grid>
                         <Grid sx={{marginTop: "30px"}}>
                             <TextField
                                 id="email"

@@ -7,8 +7,8 @@ import Dashboard from "./pages/Dashboard";
 import Signup from "./pages/Signup";
 import PrivateRoute from "./components/PrivateRoute";
 
-localStorage.setItem("isAuthenticated", "1")
-localStorage.setItem("role", "employee")
+localStorage.setItem("isAuthenticated", "")
+localStorage.setItem("role", "employer")
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

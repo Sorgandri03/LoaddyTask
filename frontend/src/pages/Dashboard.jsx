@@ -43,7 +43,7 @@ function Role({ role }) {
                 <Typography variant="body1" sx={{ mt: 2 }}>
                     Select a team or create a new one to start managing your tasks.
                 </Typography>
-
+                <TeamsList />
                 <Button
                     variant="contained"
                     sx={{ mt: 2 }}
