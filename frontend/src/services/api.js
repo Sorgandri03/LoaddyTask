@@ -1,21 +1,28 @@
-const BASE_URL = "http://localhost:8080/api";
+const BASE_URL = "http://localhost:3001/api";
 
 function sendLogin(email, password) {
-    return fetch(`${BASE_URL}/login`, {
-        method: "POST",
+    return fetch(`${BASE_URL}/users`, {
+        method: "GET",
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email, password }),
     })
         .then((response) => {
             if (!response.ok) {
-                throw new Error("Login failed");
+                throw new Error("Failed to fetch users");
             }
-            return false;
-        })
-        .then((data) => {
-            return data;
+            return response.json().then((data) => {
+                const response = data.filter((user) => user.password === password);
+                if (response.length > 0) {
+                    localStorage.setItem("token", "dummy-token"); // Replace with actual token logic
+                    localStorage.setItem("user", email);
+                    localStorage.setItem("isAuthenticated", "true");
+                    return email;
+                } else {
+                    console.error("Unable to login");
+                    return false; // Login failed
+                }
+            });
         });
 }
 

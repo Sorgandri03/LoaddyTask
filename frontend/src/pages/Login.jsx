@@ -15,11 +15,7 @@ function Login() {
             if (response === false) {
                 alert("Login failed");
             } else {
-                localStorage.setItem("token", response.token);
-                localStorage.setItem("user", JSON.stringify(response.user));
-                localStorage.setItem("role", JSON.stringify(response.user.role));
-                localStorage.setItem("isAuthenticated", "true");
-                window.location.replace("./dashboard");
+                window.location.replace("/dashboard");
             }
         })
     };
