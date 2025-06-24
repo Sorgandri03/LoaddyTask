@@ -7,8 +7,6 @@ import Dashboard from "./pages/Dashboard";
 import Signup from "./pages/Signup";
 import PrivateRoute from "./components/PrivateRoute";
 
-localStorage.setItem("role", "employer")
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <Router>

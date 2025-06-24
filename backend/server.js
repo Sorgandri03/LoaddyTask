@@ -10,9 +10,12 @@ app.use(cors({ origin: 'http://localhost:3000' }));
 
 app.post('/api/users', async (req, res) => {
     const { email, password } = req.body;
-    const users = await sql`select * from users where email = ${email} and password = ${password}`;
-    if (users.length === 1) {
-        res.json({ success: true });
+    const employees = await sql`select * from employee where email = ${email} and password = ${password}`;
+    const employers = await sql`select * from employer where email = ${email} and password = ${password}`;
+    if (employees.length === 1) {
+        res.json({ success: true, role: 'employee' });
+    } else if (employers.length === 1) {
+        res.json({ success: true, role: 'employer' });
     } else {
         res.json({ success: false });
     }

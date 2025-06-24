@@ -19,6 +19,7 @@ function sendLogin(email, password) {
                 if (data.success === true) {
                     localStorage.setItem("user", email);
                     localStorage.setItem("isAuthenticated", "true");
+                    localStorage.setItem("role", data.role);
                     return true;
                 } else {
                     console.error("Unable to login");

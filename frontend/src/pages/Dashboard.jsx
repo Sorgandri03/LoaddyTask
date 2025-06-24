@@ -36,6 +36,21 @@ function TeamsList() {
     );
 }
 
+function Logout() {
+    const handleLogout = () => {
+        localStorage.removeItem("user");
+        localStorage.removeItem("isAuthenticated");
+        localStorage.removeItem("role");
+        window.location.href = '/';
+    };
+
+    return (
+        <Button variant="contained" color="secondary" onClick={handleLogout}>
+            Logout
+        </Button>
+    );
+}
+
 function Role({ role }) {
     if (role === "employer") {
         return (
@@ -76,6 +91,9 @@ function Dashboard() {
                     <Typography variant="h4">Dashboard</Typography>
                     <Role role={localStorage.getItem("role")} />
                 </ThemeProvider>
+            </Box>
+            <Box sx={{ p: 4 }}>
+                <Logout />
             </Box>
             <Footer />
         </Box>
