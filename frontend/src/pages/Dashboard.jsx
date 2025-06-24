@@ -1,5 +1,3 @@
-//import { useEffect, useState } from "react";
-
 import {Box, Button, ThemeProvider, Typography} from "@mui/material";
 import { Navbar } from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -14,25 +12,40 @@ const theme = createTheme({
 });
 
 function TeamsList() {
-    const teams =getTeams();
+    const [teams, setTeams] = React.useState([]);
+
+    React.useEffect(() => {
+        getTeams().then(setTeams);
+    }, []);
 
     const handleClick = (team) => {
-        window.location.href = `/team/${team.id}`;
+        localStorage.setItem("team", JSON.stringify(team));
+        window.location.href = `/team/${team.idteam}`;
     };
 
-    return teams.length > 0 && (
-        <>
+    return teams.length > 0 ? (
+       <Box display="flex" flexDirection="column" alignItems="flex-start">
             {teams.map((team, index) => (
                 <Button
-                    variant="outlined"
+                    variant="contained"
                     key={index}
-                    sx={{ mt: 2 }}
+                    sx={{
+                        mt: 2,
+                        backgroundColor: "green",
+                        color: "white",
+                        minWidth: 100,
+                        width: 100
+                    }}
                     onClick={() => handleClick(team)}
                 >
                     {team.name}
                 </Button>
             ))}
-        </>
+        </Box>
+    ) : (
+        <Typography variant="body2" sx={{ mt: 2 }}>
+            No teams found.
+        </Typography>
     );
 }
 
@@ -45,7 +58,7 @@ function Logout() {
     };
 
     return (
-        <Button variant="contained" color="secondary" onClick={handleLogout}>
+        <Button variant="contained" sx={{backgroundColor: '#b23b3b'}} onClick={handleLogout}>
             Logout
         </Button>
     );
@@ -67,7 +80,7 @@ function Role({ role }) {
                     Create New Team
                 </Button>
             </React.Fragment>
-        );  //insert all teams that the employer is a part of
+        );
     }
     else {
         return (
@@ -75,9 +88,9 @@ function Role({ role }) {
                 <Typography variant="body1" sx={{ mt: 2 }}>
                     Select a team from the ones that you are a part of.
                 </Typography>
-
+            <TeamsList />
             </React.Fragment>
-        );  //insert all teams that the employee is a part of
+        );
     }
 }
 

@@ -9,7 +9,7 @@ function sendLogin(email, password) {
         }),
         headers: {
             "Content-Type": "application/json"
-        },
+        }
     })
         .then((response) => {
             if (!response.ok) {
@@ -34,18 +34,23 @@ function sendSignup(username, email, password, role) {
 }
 
 function getTeams() {
-    return fetch(`${BASE_URL}/teams`, {
-        method: "GET",
+    return fetch(`${BASE_URL}/getteams`, {
+        method: "POST",
+        body: JSON.stringify({
+            member : localStorage.getItem("user"),
+            role : localStorage.getItem("role")
+        }),
         headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+            "Content-Type": "application/json"
+        }
     })
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Failed to fetch teams");
             }
-            return response.json();
+            return response.json().then((data) => {
+                return JSON.parse(data.teams);
+            });
         });
 }
 

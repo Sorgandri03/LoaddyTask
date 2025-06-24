@@ -21,6 +21,20 @@ app.post('/api/users', async (req, res) => {
     }
 });
 
+app.post('/api/getteams', async (req, res) => {
+    const { member, role } = req.body;
+    const result = role === 'employee' ?
+        null :
+        await sql`select idteam,name,description from team join employer on team.idemployer = employer.idemployer where email = ${member}`;
+
+    if (result.length > 0) {
+        const teams = JSON.stringify(result);
+        res.json({success: true, teams: teams});
+    } else {
+        res.json({success: false});
+    }
+});
+
 app.get('/api/algorithm', async (req, res) => {
     let options = {
         mode: 'text',
