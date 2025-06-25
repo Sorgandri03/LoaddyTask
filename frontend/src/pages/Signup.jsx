@@ -12,19 +12,16 @@ function Signup() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        sendSignup(email, password).then((response) => {
+        sendSignup(email, password, role).then((response) => {
             if (response === false) {
-                alert("Login failed");
+                alert("Registration failed");
             } else {
-                localStorage.setItem("token", response.token);
-                localStorage.setItem("user", JSON.stringify(response.user));
-                localStorage.setItem("isAuthenticated", "true");
-                window.location.replace("./Dashboard");
+                window.location.replace("./dashboard");
             }
         })
     };
 
-    return isAuthenticated() ? window.location.replace("./Dashboard") : (
+    return isAuthenticated() ? window.location.replace("./dashboard") : (
         <Box>
             <Navbar />
             <div>

@@ -22,7 +22,6 @@ function TeamsList() {
         localStorage.setItem("team", JSON.stringify(team));
         window.location.href = `/team/${team.idteam}`;
     };
-
     return teams.length > 0 ? (
        <Box display="flex" flexDirection="column" alignItems="flex-start">
             {teams.map((team, index) => (
@@ -31,7 +30,6 @@ function TeamsList() {
                     key={index}
                     sx={{
                         mt: 2,
-                        backgroundColor: "green",
                         color: "white",
                         minWidth: 100,
                         width: 100
@@ -43,8 +41,8 @@ function TeamsList() {
             ))}
         </Box>
     ) : (
-        <Typography variant="body2" sx={{ mt: 2 }}>
-            No teams found.
+        <Typography variant="body1" sx={{ mt: 2 }}>
+            No teams were found, get an invite from an employer to join a team.
         </Typography>
     );
 }
@@ -88,7 +86,7 @@ function Role({ role }) {
                 <Typography variant="body1" sx={{ mt: 2 }}>
                     Select a team from the ones that you are a part of.
                 </Typography>
-            <TeamsList />
+                <TeamsList />
             </React.Fragment>
         );
     }

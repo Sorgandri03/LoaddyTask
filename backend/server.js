@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json())
 app.use(cors({ origin: 'http://localhost:3000' }));
 
-app.post('/api/users', async (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     const employees = await sql`select * from employee where email = ${email} and password = ${password}`;
     const employers = await sql`select * from employer where email = ${email} and password = ${password}`;
@@ -21,13 +21,32 @@ app.post('/api/users', async (req, res) => {
     }
 });
 
+app.post('/api/signup', async (req, res) => {
+    const { email, password, role } = req.body;
+    const result = role === 'employee' ?
+        await sql`select * from employee where email = ${email}` :
+        await sql`select * from employer where email = ${email}`;
+    if (result.length === 1) {
+        res.json({ success: false });
+    } else {
+        const insertUser = role === 'employee' ?
+            await sql`insert into employee (email, password) values (${email}, ${password})` :
+            await sql`insert into employer (email, password) values (${email}, ${password})`;
+        if (insertUser) {
+            res.json({ success: true });
+        }
+        else {
+            res.json({ success: false });
+        }
+    }
+});
+
 app.post('/api/getteams', async (req, res) => {
     const { member, role } = req.body;
     const result = role === 'employee' ?
-        null :
+        await sql`select t.idteam, t.name, t.description from team as t join partof as p on t.idteam = p.idteam join employee as e on p.idemployee = e.idemployee where e.email = ${member}` :
         await sql`select idteam,name,description from team join employer on team.idemployer = employer.idemployer where email = ${member}`;
-
-    if (result.length > 0) {
+    if (result) {
         const teams = JSON.stringify(result);
         res.json({success: true, teams: teams});
     } else {
