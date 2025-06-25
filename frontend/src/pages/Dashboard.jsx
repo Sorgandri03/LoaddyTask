@@ -17,11 +17,11 @@ function TeamsList() {
     React.useEffect(() => {
         getTeams().then(setTeams);
     }, []);
-
     const handleClick = (team) => {
         localStorage.setItem("team", JSON.stringify(team));
         window.location.href = `/team/${team.idteam}`;
     };
+
     return teams.length > 0 ? (
        <Box display="flex" flexDirection="column" alignItems="flex-start">
             {teams.map((team, index) => (
@@ -42,7 +42,7 @@ function TeamsList() {
         </Box>
     ) : (
         <Typography variant="body1" sx={{ mt: 2 }}>
-            No teams were found, get an invite from an employer to join a team.
+            No teams were found.
         </Typography>
     );
 }

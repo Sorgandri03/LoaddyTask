@@ -75,7 +75,7 @@ function getTeams() {
                 throw new Error("Failed to fetch teams");
             }
             return response.json().then((data) => {
-                return data.length > 0 ?
+                return data.teams.length > 0 ?
                     JSON.parse(data.teams) : [];
             });
         });
