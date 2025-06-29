@@ -60,7 +60,7 @@ function sendSignup(email, password, role) {
 }
 
 function getTeams() {
-    return fetch(`${BASE_URL}/getteams`, {
+    return fetch(`${BASE_URL}/teams`, {
         method: "POST",
         body: JSON.stringify({
             member : localStorage.getItem("user"),
@@ -81,6 +81,23 @@ function getTeams() {
         });
 }
 
-export { sendLogin, sendSignup , getTeams };
+function getTeamById(idteam) {
+    return fetch(`${BASE_URL}/teams/${idteam}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch team");
+            }
+            return response.json().then((data) => {
+                return data.team ? JSON.parse(data.team) : [];
+            });
+        });
+}
+
+export { sendLogin, sendSignup , getTeams , getTeamById };
 
 

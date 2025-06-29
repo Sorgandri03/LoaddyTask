@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
@@ -15,6 +14,8 @@ root.render(
                 <Route path="/" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+                <Route path='/teams' element={<PrivateRoute/>}/>
+                <Route path='/teams/:idteam' element={<PrivateRoute/>}/>
             </Routes>
         </div>
     </Router>

@@ -19,7 +19,7 @@ function TeamsList() {
     }, []);
     const handleClick = (team) => {
         localStorage.setItem("team", JSON.stringify(team));
-        window.location.href = `/team/${team.idteam}`;
+        window.location.href = `/teams/${team.idteam}`;
     };
 
     return teams.length > 0 ? (

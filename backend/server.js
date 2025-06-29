@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import cors from 'cors';
 import sql from './db.js';
 import {PythonShell} from 'python-shell';
@@ -41,7 +41,7 @@ app.post('/api/signup', async (req, res) => {
     }
 });
 
-app.post('/api/getteams', async (req, res) => {
+app.post('/api/teams', async (req, res) => {
     const { member, role } = req.body;
     const result = role === 'employee' ?
         await sql`select t.idteam, t.name, t.description from team as t join partof as p on t.idteam = p.idteam join employee as e on p.idemployee = e.idemployee where e.email = ${member}` :
@@ -54,6 +54,17 @@ app.post('/api/getteams', async (req, res) => {
     }
 });
 
+app.get('/api/teams/:idteam', async (req, res) => {
+    const { idteam } = req.params;
+    const result = await sql`select e.idemployee, e.email from employee as e join partof as p on e.idemployee = p.idemployee join team as t on p.idteam = t.idteam where t.idteam = ${idteam} order by e.idemployee`;
+    if (result) {
+        const team = JSON.stringify(result);
+        res.json({success: true, team: team});
+    } else {
+        res.json({success: false});
+    }
+})
+
 app.get('/api/algorithm', async (req, res) => {
     let options = {
         mode: 'text',
@@ -65,5 +76,15 @@ app.get('/api/algorithm', async (req, res) => {
         res.json(result);
     });
 })
+
+app.post('/test', async (req, res) => {
+    const result = await sql`select * from employee`;
+    if (result) {
+        const teams = JSON.stringify(result);
+        res.json({success: true, teams: teams});
+    } else {
+        res.json({success: false});
+    }
+});
 
 app.listen(3001, () => console.log('Server running on port 3001'));
