@@ -5,7 +5,7 @@ const sql = postgres({
     port                 : 5432,          
     database             : 'loaddy_db',            
     username             : 'loaddy_user',            
-    password             : 'loaddy_pwd'
+    password             : 'loaddy_password',
 })
 
 export default sql;
