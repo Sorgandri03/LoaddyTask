@@ -98,6 +98,30 @@ function getTeamById(idteam) {
         });
 }
 
-export { sendLogin, sendSignup , getTeams , getTeamById };
+function createTeam(teamName, teamDescription) {
+    return fetch(`${BASE_URL}/createTeam`, {
+        method: "POST",
+        body: JSON.stringify({
+            name: teamName,
+            description: teamDescription,
+            employer: localStorage.getItem("user")
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                return false;
+            }
+            return response.json().then((data) => {
+                if (data.success === true) {
+                    return data.id;
+                }
+                return false;
+            });
+        });
+}
 
+export { sendLogin, sendSignup , getTeams , getTeamById , createTeam };
 

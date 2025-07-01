@@ -87,4 +87,14 @@ app.post('/test', async (req, res) => {
     }
 });
 
+app.post('/api/createTeam', async (req, res) => {
+    const { name, description, employer } = req.body;
+    const result = await sql`insert into team (name, description, idemployer) values (${name}, ${description}, (select idemployer from employer where email = ${employer})) returning idteam`;
+    if (result.length === 1) {
+        res.json({ id : result[0].idteam, success: true });
+    } else {
+        res.json({ success: false });
+    }
+})
+
 app.listen(3001, () => console.log('Server running on port 3001'));
