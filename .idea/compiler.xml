@@ -12,7 +12,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="loaddytask" options="-parameters" />
+      <module name="loaddytask" options="" />
     </option>
   </component>
 </project>
