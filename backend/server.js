@@ -56,11 +56,14 @@ app.post('/api/teams', async (req, res) => {
 
 app.get('/api/teams/:idteam', async (req, res) => {
     const { idteam } = req.params;
-    const { role } = req.body;
-    const result = role === 'employee' ?
-    await sql`select e.idemployee, e.email from employee as e join partof as p on e.idemployee = p.idemployee join team as t on p.idteam = t.idteam where t.idteam = ${idteam} order by e.idemployee` :
-    await sql`select e.idemployee, e.email from employee as e join partof as p on e.idemployee = p.idemployee join team as t on p.idteam = t.idteam where t.idteam = ${idteam}`;
-    if (result) {
+    const email = req.body;
+
+    const employerCheck = await sql`select 1 from team join employer on team.idemployer = employer.idemployer where team.idteam = ${idteam} and employer.email = ${email}`;
+
+    const employeeCheck = await sql`select 1 from employee as e join partof as p on e.idemployee = p.idemployee where p.idteam = ${idteam} and e.email = ${email}`;
+
+    if (employerCheck.length > 0 || employeeCheck.length > 0) {
+        const result = await sql`select e.idemployee, e.email from employee as e join partof as p on e.idemployee = p.idemployee where p.idteam = ${idteam} order by e.idemployee`;
         const team = JSON.stringify(result);
         res.json({success: true, team: team});
     } else {
@@ -89,19 +92,5 @@ app.post('/test', async (req, res) => {
         res.json({success: false});
     }
 });
-
-app.post('/api/createTeam', async (req, res) => {
-    const { name, description, employer } = req.body;
-    const result = await sql`insert into team (name, description, idemployer) values (${name}, ${description}, (select idemployer from employer where email = ${employer})) returning idteam`;
-    if (result.length === 1) {
-        res.json({ id : result[0].idteam, success: true });
-    } else {
-        res.json({ success: false });
-    }
-})
-
-app.post('/api/getSkills', async (req, res) => {
-
-})
 
 app.listen(3001, () => console.log('Server running on port 3001'));
