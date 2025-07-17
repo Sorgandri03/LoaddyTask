@@ -56,7 +56,10 @@ app.post('/api/teams', async (req, res) => {
 
 app.get('/api/teams/:idteam', async (req, res) => {
     const { idteam } = req.params;
-    const result = await sql`select e.idemployee, e.email from employee as e join partof as p on e.idemployee = p.idemployee join team as t on p.idteam = t.idteam where t.idteam = ${idteam} order by e.idemployee`;
+    const { role } = req.body;
+    const result = role === 'employee' ?
+    await sql`select e.idemployee, e.email from employee as e join partof as p on e.idemployee = p.idemployee join team as t on p.idteam = t.idteam where t.idteam = ${idteam} order by e.idemployee` :
+    await sql`select e.idemployee, e.email from employee as e join partof as p on e.idemployee = p.idemployee join team as t on p.idteam = t.idteam where t.idteam = ${idteam}`;
     if (result) {
         const team = JSON.stringify(result);
         res.json({success: true, team: team});
