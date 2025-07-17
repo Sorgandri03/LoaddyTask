@@ -100,4 +100,8 @@ app.post('/api/createTeam', async (req, res) => {
     }
 })
 
+app.post('/api/getSkills', async (req, res) => {
+
+})
+
 app.listen(3001, () => console.log('Server running on port 3001'));
