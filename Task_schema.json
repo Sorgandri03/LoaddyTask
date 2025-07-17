@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["name", "language", "weight"],
+    "properties": {
+      "name": {
+        "type": "string"
+      },
+      "language": {
+        "type": "string"
+      },
+      "weight": {
+        "type": "integer",
+        "minimum": 0
+      }
+    },
+    "additionalProperties": false
+  }
+}
