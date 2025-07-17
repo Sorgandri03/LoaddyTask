@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS task
     description TEXT,
     startDate   DATE,
     endDate     DATE,
-    status      VARCHAR(50),
+    weight      INT DEFAULT 0,
+    status      VARCHAR(50) CHECK (status IN ('not assigned', 'assigned', 'compleated')),
     emailEmployee  VARCHAR REFERENCES employee (email)
 );
 
