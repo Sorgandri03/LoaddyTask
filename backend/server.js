@@ -81,13 +81,30 @@ app.post('/api/teams/:idteam', async (req, res) => {
     }
 })
 
-app.post('/api/teams/create', async (req, res) => {
+app.post('/api/createteam', async (req, res) => {
     const { name, description, employer } = req.body;
-    const createTeam = await sql`insert into team (name, description) values (${name}, ${description})`;
-    if (createTeam) {
-        res.json({ success: true });
+    const idemployer = await sql`select idemployer from employer where email = ${employer}`;
+    if (!idemployer[0]) {
+        return res.json({ success: false });
+    }
+    const createTeam = await sql`insert into team (name, description, idemployer) values (${name}, ${description}, ${idemployer[0].idemployer}) returning idteam`;
+    if (createTeam.length > 0) {
+        res.json({ success: true, idteam: createTeam[0].idteam });
     } else {
         res.json({ success: false });
+    }
+})
+
+app.post('/api/employee/:idemployee', async (req, res) => {
+    const { idteam } = req.params;
+
+    const result = await sql`select * from employee as e join have as h on e.idemployee = h.idemployee join skills as s on h.idskills = s.idskills where e.idemployee = ${idteam}`;
+    if (result) {
+        const skills = JSON.stringify(result);
+        res.json({success: true, skills: skills});
+    }
+    else {
+        res.json({success: false});
     }
 })
 

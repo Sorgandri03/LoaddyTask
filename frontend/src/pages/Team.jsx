@@ -1,6 +1,6 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
-import {getTeamById} from "../services/api";
+import {getSkills, getTeamById} from "../services/api";
 import {Navbar} from "../components/Navbar";
 import {Box, ThemeProvider, Typography} from "@mui/material";
 import Footer from "../components/Footer";
@@ -18,13 +18,40 @@ function Team(){
     React.useEffect(() => {
         getTeamById(idteam).then((data) => {
             setTeam(data);
+            let skills = [];
+            for (let i = 0; i < data.length; i++) {
+                skills.push(getSkills([i].name));
+            }
+            console.log(skills);
         });
     }, [idteam]);
 
     if (!team){
-        return <p>PALLE</p>;
+        return <p></p>;
     }
 
+    if (localStorage.getItem("role") === "employer") {
+        return (
+            <Box>
+                <Navbar />
+                <Box sx={{ p: 4 }}>
+                    <ThemeProvider theme={theme}>
+                        <Typography variant="h4">Team {idteam}</Typography>
+                        <p></p>
+                        <Typography variant="body1">Members:</Typography>
+                        <Box component="ul" sx={{ pl: 2 }}>
+                            {team.map((member, skills) => (
+                                <Box component="li" key={member.idemployee} sx={{ listStyle: "disc" }}>
+                                    {member.email}&nbsp;&nbsp;&nbsp;&nbsp;
+                                </Box>
+                            ))}
+                        </Box>
+                    </ThemeProvider>
+                </Box>
+                <Footer />
+            </Box>
+        );
+    }
     return (
         <Box>
             <Navbar />

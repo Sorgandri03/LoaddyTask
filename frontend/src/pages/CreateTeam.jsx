@@ -14,7 +14,7 @@ function CreateTeam() {
             if (response === false) {
                 alert("Failed to create team");
             } else {
-                window.location.replace("/team/" + response);
+                window.location.replace("/teams/" + response);
             }
         })
     };
