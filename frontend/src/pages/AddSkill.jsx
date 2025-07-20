@@ -3,7 +3,7 @@ import {Navbar} from "../components/Navbar";
 import {Box, Button, Checkbox, FormControlLabel, FormGroup, Grid, ThemeProvider, Typography} from "@mui/material";
 import Footer from "../components/Footer";
 import {createTheme} from "@mui/material/styles";
-import {getSkills} from "../services/api";
+import {getSkills, setSkills} from "../services/api";
 
 const theme = createTheme({
     typography: {
@@ -12,7 +12,13 @@ const theme = createTheme({
 });
 
 function submit(selectedSkills) {
-    console.log("Selected skills:", selectedSkills);
+    setSkills(selectedSkills).then(response => {
+        if (response) {
+            window.location.replace("./dashboard");
+        } else {
+            alert("Failed to add skills");
+        }
+    });
 }
 
 function AddSkill(){

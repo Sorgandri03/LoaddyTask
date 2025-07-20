@@ -155,12 +155,26 @@ Status: ${task.status || '—'}
     }
 });
 
-app.post('/api/skills', async (req, res) => {
+app.post('/api/getskills', async (req, res) => {
     const result = await sql`select * from skills`;
     if (result) {
         const skills = JSON.stringify(result);
         res.json({success: true, skills: skills});
     } else {
+        res.json({success: false});
+    }
+});
+
+app.post('/api/setskills', async (req, res) => {
+    const { employee, skills } = req.body;
+    try {
+        const idemployee = await sql`select idemployee from employee where email = ${employee}`;
+        for (const skill of skills) {
+            await sql`insert into have (idemployee, idskills) values (${idemployee[0].idemployee}, ${skill})`;
+        }
+        res.json({success: true});
+    } catch (error) {
+        console.error('Error setting skills:', error);
         res.json({success: false});
     }
 });

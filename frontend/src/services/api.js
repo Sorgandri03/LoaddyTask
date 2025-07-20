@@ -128,7 +128,7 @@ function createTeam(teamName, teamDescription) {
 }
 
 function getSkills(){
-    return fetch(`${BASE_URL}/skills`, {
+    return fetch(`${BASE_URL}/getskills`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -144,5 +144,26 @@ function getSkills(){
         });
 }
 
-export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills };
+function setSkills(skills) {
+    return fetch(`${BASE_URL}/setskills`, {
+        method: "POST",
+        body: JSON.stringify({
+            employee : localStorage.getItem("user"),
+            skills : skills
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to set skills");
+            }
+            return response.json().then(() => {
+                return true;
+            });
+        });
+}
+
+export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills };
 
