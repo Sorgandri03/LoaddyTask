@@ -85,7 +85,8 @@ function getTeamById(idteam) {
     return fetch(`${BASE_URL}/teams/${idteam}`, {
         method: "POST",
         body: JSON.stringify({
-            email: localStorage.getItem("user")
+            member: localStorage.getItem("user"),
+            role: localStorage.getItem("role")
         }),
         headers: {
             "Content-Type": "application/json"
@@ -126,5 +127,22 @@ function createTeam(teamName, teamDescription) {
         });
 }
 
-export { sendLogin, sendSignup , getTeams , getTeamById , createTeam };
+function getSkills(){
+    return fetch(`${BASE_URL}/skills`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch skills");
+            }
+            return response.json().then((data) => {
+                return data.skills ? JSON.parse(data.skills) : [];
+            });
+        });
+}
+
+export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills };
 

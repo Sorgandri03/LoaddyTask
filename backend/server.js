@@ -55,23 +55,6 @@ app.post('/api/teams', async (req, res) => {
     }
 });
 
-app.get('/api/teams/:idteam', async (req, res) => {
-    const { idteam } = req.params;
-    const email = req.body;
-
-    const employerCheck = await sql`select 1 from team join employer on team.idemployer = employer.idemployer where team.idteam = ${idteam} and employer.email = ${email}`;
-
-    const employeeCheck = await sql`select 1 from employee as e join partof as p on e.idemployee = p.idemployee where p.idteam = ${idteam} and e.email = ${email}`;
-
-    if (employerCheck.length > 0 || employeeCheck.length > 0) {
-        const result = await sql`select e.idemployee, e.email from employee as e join partof as p on e.idemployee = p.idemployee where p.idteam = ${idteam} order by e.idemployee`;
-        const team = JSON.stringify(result);
-        res.json({success: true, team: team});
-    } else {
-        res.json({success: false});
-    }
-})
-
 app.get('/api/algorithm', async (req, res) => {
     let options = {
         mode: 'text',
@@ -143,6 +126,16 @@ Status: ${task.status || '—'}
     } catch (err) {
         console.error('Error while sending notifications:', err);
         res.status(500).send('Error while sending notifications');
+    }
+});
+
+app.post('/api/skills', async (req, res) => {
+    const result = await sql`select * from skills`;
+    if (result) {
+        const skills = JSON.stringify(result);
+        res.json({success: true, skills: skills});
+    } else {
+        res.json({success: false});
     }
 });
 

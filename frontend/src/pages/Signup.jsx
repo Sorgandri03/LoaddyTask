@@ -16,7 +16,8 @@ function Signup() {
             if (response === false) {
                 alert("Registration failed");
             } else {
-                window.location.replace("./dashboard");
+                if(localStorage.getItem("role") === "employee") window.location.replace("./add-skill");
+                else window.location.replace("./dashboard");
             }
         })
     };
