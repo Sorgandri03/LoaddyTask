@@ -55,6 +55,32 @@ app.post('/api/teams', async (req, res) => {
     }
 });
 
+app.post('/api/teams/:idteam', async (req, res) => {
+    const { idteam } = req.params;
+    const { member, role } = req.body;
+
+    let checkMember;
+    if (role === 'employee') {
+        checkMember = await sql`select e.idemployee from employee as e join partof as p on e.idemployee = p.idemployee join team as t on p.idteam = t.idteam where t.idteam = ${idteam} and e.email = ${member}`;
+    } else if (role === 'employer') {
+        checkMember = await sql`select employer.idemployer from employer join team on employer.idemployer = team.idemployer where team.idteam = ${idteam} and employer.email = ${member}`;
+    } else {
+        checkMember = [];
+    }
+
+    if (checkMember.length > 0) {
+        const result = await sql`select e.idemployee, e.email from employee as e join partof as p on e.idemployee = p.idemployee join team as t on p.idteam = t.idteam where t.idteam = ${idteam} order by e.idemployee`;
+        if (result) {
+            const team = JSON.stringify(result);
+            res.json({success: true, team: team});
+        } else {
+            res.json({success: false});
+        }
+    } else {
+        res.json({success: false});
+    }
+})
+
 app.get('/api/algorithm', async (req, res) => {
     let options = {
         mode: 'text',
