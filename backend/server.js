@@ -81,6 +81,16 @@ app.post('/api/teams/:idteam', async (req, res) => {
     }
 })
 
+app.post('/api/teams/create', async (req, res) => {
+    const { name, description, employer } = req.body;
+    const createTeam = await sql`insert into team (name, description) values (${name}, ${description})`;
+    if (createTeam) {
+        res.json({ success: true });
+    } else {
+        res.json({ success: false });
+    }
+})
+
 app.get('/api/algorithm', async (req, res) => {
     let options = {
         mode: 'text',
