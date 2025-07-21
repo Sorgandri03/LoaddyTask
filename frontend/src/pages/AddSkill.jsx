@@ -31,7 +31,7 @@ function AddSkill(){
     }, []);
 
     React.useEffect(() => {
-        getEmployeeSkills().then((data) => {
+        getEmployeeSkills(localStorage.getItem("user")).then((data) => {
             setSelectedSkills(data.map(skill => skill.idskills));
         });
     }, []);

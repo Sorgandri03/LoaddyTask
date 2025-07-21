@@ -165,8 +165,8 @@ function setSkills(skills) {
         });
 }
 
-function getEmployeeSkills() {
-    return fetch(`${BASE_URL}/employee/${localStorage.getItem("user")}`, {
+function getEmployeeSkills(employee) {
+    return fetch(`${BASE_URL}/employee/${employee}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
