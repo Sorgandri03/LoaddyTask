@@ -81,17 +81,17 @@ VALUES ('Frank', 'Miller', '1988-06-15', '1111111111', 'frank.miller@example.com
        ('Donna', 'Ramirez', '1992-08-08', '1819202122', 'donna.ramirez@example.com','palle'),
        ('Kevin', 'Lewis', '1983-09-09', '1920212223', 'kevin.lewis@example.com','palle');
 
-INSERT INTO task (idtask, name, description, startdate, enddate, status, emailEmployee)
-VALUES (1, 'task 1', 'Description of task 1', '2023-01-01', '2023-01-10', 'Completed', 'brandon.clark@example.com'),
-       (2, 'task 2', 'Description of task 2', '2023-02-01', '2023-02-15', 'In Progress', 'brandon.clark@example.com'),
-       (3, 'task 3', 'Description of task 3', '2023-03-01', '2023-03-20', 'Not Started', 'brandon.clark@example.com'),
-       (4, 'task 4', 'Description of task 4', '2023-04-01', '2023-04-25', 'Completed', 'brandon.clark@example.com'),
-       (5, 'task 5', 'Description of task 5', '2023-05-01', '2023-05-30', 'In Progress', 'brandon.clark@example.com'),
-       (6, 'task 6', 'Description of task 6', '2023-06-01', '2023-06-15', 'Not Started', 'brandon.clark@example.com'),
-       (7, 'task 7', 'Description of task 7', '2023-07-01', '2023-07-20', 'Completed', 'brandon.clark@example.com'),
-       (8, 'task 8', 'Description of task 8', '2023-08-01', '2023-08-25', 'In Progress', 'brandon.clark@example.com'),
-       (9, 'task 9', 'Description of task 9', '2023-09-01', '2023-09-10', 'Not Started', 'brandon.clark@example.com'),
-       (10, 'task 10', 'Description of task 10', '2023-10-01', '2023-10-15', 'Completed', 'brandon.clark@example.com');
+INSERT INTO task (name, description, startdate, enddate, status, emailEmployee)
+VALUES ('task 1', 'Description of task 1', '2023-01-01', '2023-01-10', 'compleated', 'brandon.clark@example.com'),
+       ('task 2', 'Description of task 2', '2023-02-01', '2023-02-15', 'assigned', 'brandon.clark@example.com'),
+       ('task 3', 'Description of task 3', '2023-03-01', '2023-03-20', 'not assigned', 'brandon.clark@example.com'),
+       ('task 4', 'Description of task 4', '2023-04-01', '2023-04-25', 'compleated', 'brandon.clark@example.com'),
+       ('task 5', 'Description of task 5', '2023-05-01', '2023-05-30', 'assigned', 'brandon.clark@example.com'),
+       ('task 6', 'Description of task 6', '2023-06-01', '2023-06-15', 'not assigned', 'brandon.clark@example.com'),
+       ('task 7', 'Description of task 7', '2023-07-01', '2023-07-20', 'compleated', 'brandon.clark@example.com'),
+       ('task 8', 'Description of task 8', '2023-08-01', '2023-08-25', 'assigned', 'brandon.clark@example.com'),
+       ( 'task 9', 'Description of task 9', '2023-09-01', '2023-09-10', 'not assigned', 'brandon.clark@example.com'),
+       ( 'task 10', 'Description of task 10', '2023-10-01', '2023-10-15', 'compleated', 'brandon.clark@example.com');
 
 INSERT INTO require (idskills, idtask)
 VALUES (1, 1),
@@ -102,18 +102,7 @@ VALUES (1, 1),
        (6, 3),
        (7, 4),
        (8, 4),
-       (9, 5),
-       (10, 5),
-       (1, 6),
-       (2, 6),
-       (3, 7),
-       (4, 7),
-       (5, 8),
-       (6, 8),
-       (7, 9),
-       (8, 9),
-       (9, 10),
-       (10, 10);
+       (9, 5);
 
 INSERT INTO have (emailemployee, idskills)
 VALUES ('brandon.clark@example.com', 1),
