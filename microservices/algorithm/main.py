@@ -1,11 +1,11 @@
 from flask import Flask
-import microservices.algorithm.customLoadBalance as customLoadBalance
+import customLoadBalance
 app = Flask(__name__)
 
 @app.route('/algorithm', methods=['GET'])
-def customLoadBalance():
+def algorithm():
     return "Algorithm service is running!"
-    # return customLoadBalance.customloadbalance(ListOfEmployees, tasksList)
+    #return customLoadBalance.customloadbalance(ListOfEmployees, tasksList)
 
 @app.route('/')
 def index():
