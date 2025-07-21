@@ -206,4 +206,25 @@ function addTeamMember(idteam, member) {
         });
 }
 
-export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployee , addTeamMember };
+function deleteTeamMember(idteam, memberEmail) {
+    return fetch(`${BASE_URL}/deletemember`, {
+        method: "POST",
+        body: JSON.stringify({
+            idteam: idteam,
+            member: memberEmail
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to delete member");
+            }
+            return response.json().then((data) => {
+                return data.success;
+            });
+        });
+}
+
+export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployee , addTeamMember , deleteTeamMember };
