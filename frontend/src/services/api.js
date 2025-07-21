@@ -165,12 +165,9 @@ function setSkills(skills) {
         });
 }
 
-function getEmployee(employee) {
-    return fetch(`${BASE_URL}/getemployeeskills`, {
-        method: "POST",
-        body: JSON.stringify({
-            employee : localStorage.getItem("user")
-        }),
+function getEmployeeSkills() {
+    return fetch(`${BASE_URL}/employee/${localStorage.getItem("user")}`, {
+        method: "GET",
         headers: {
             "Content-Type": "application/json"
         }
@@ -180,7 +177,7 @@ function getEmployee(employee) {
                 throw new Error("Failed to fetch employee skills");
             }
             return response.json().then((data) => {
-                return data ? JSON.parse(data) : [];
+                return data ? JSON.parse(data.skills) : [];
             });
         });
 }
@@ -227,4 +224,4 @@ function deleteTeamMember(idteam, memberEmail) {
         });
 }
 
-export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployee , addTeamMember , deleteTeamMember };
+export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployeeSkills , addTeamMember , deleteTeamMember };

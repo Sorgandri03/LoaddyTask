@@ -87,6 +87,14 @@ function Role({ role }) {
                     Select a team from the ones that you are a part of.
                 </Typography>
                 <TeamsList />
+                <br />
+                <Button
+                    variant="contained"
+                    sx={{ mt: 2 }}
+                    onClick={() => window.location.href = '/add-skill'}
+                >
+                    Edit your skills
+                </Button>
             </React.Fragment>
         );
     }
@@ -96,7 +104,6 @@ function Dashboard() {
     return (
         <Box>
             <Navbar />
-            {/* Main content */}
             <Box sx={{ p: 4 }}>
                 <ThemeProvider theme={theme}>
                     <Typography variant="h4">Dashboard</Typography>
