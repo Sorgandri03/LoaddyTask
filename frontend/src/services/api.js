@@ -185,4 +185,25 @@ function getEmployee(employee) {
         });
 }
 
-export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployee };
+function addTeamMember(idteam, member) {
+    return fetch(`${BASE_URL}/addmember`, {
+        method: "POST",
+        body: JSON.stringify({
+            idteam: idteam,
+            member: member
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to add member");
+            }
+            return response.json().then((data) => {
+                return data.success;
+            });
+        });
+}
+
+export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployee , addTeamMember };

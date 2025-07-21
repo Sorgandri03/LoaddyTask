@@ -210,9 +210,15 @@ app.post('/api/addmember', async (req, res) => {
     const { idteam, member } = req.body;
 
     const idemployee = await sql`select idemployee from employee where email = ${member}`;
+    if(idemployee.length === 0) {
+        return res.json({success: false});
+    }
+    const existingMember = await sql`select * from partof where idteam = ${idteam} and idemployee = ${idemployee[0].idemployee}`;
+    if (existingMember.length > 0) {
+        return res.json({success: false});
+    }
     const result = await sql`insert into partof (idteam, idemployee) values (${idteam}, ${idemployee[0].idemployee})`;
-
-    if (result.length > 0) {
+    if (result) {
         res.json({success: true});
     } else {
         res.json({success: false});
