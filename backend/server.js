@@ -206,4 +206,17 @@ app.post('/api/setskills', async (req, res) => {
     }
 });
 
+app.post('/api/addmember', async (req, res) => {
+    const { idteam, member } = req.body;
+
+    const idemployee = await sql`select idemployee from employee where email = ${member}`;
+    const result = await sql`insert into partof (idteam, idemployee) values (${idteam}, ${idemployee[0].idemployee})`;
+
+    if (result.length > 0) {
+        res.json({success: true});
+    } else {
+        res.json({success: false});
+    }
+});
+
 app.listen(3001, () => console.log('Server running on port 3001'));
