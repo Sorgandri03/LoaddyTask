@@ -165,12 +165,9 @@ function setSkills(skills) {
         });
 }
 
-function getEmployee(employee) {
-    return fetch(`${BASE_URL}/getemployeeskills`, {
-        method: "POST",
-        body: JSON.stringify({
-            employee : localStorage.getItem("user")
-        }),
+function getEmployeeSkills() {
+    return fetch(`${BASE_URL}/employee/${localStorage.getItem("user")}`, {
+        method: "GET",
         headers: {
             "Content-Type": "application/json"
         }
@@ -180,9 +177,51 @@ function getEmployee(employee) {
                 throw new Error("Failed to fetch employee skills");
             }
             return response.json().then((data) => {
-                return data ? JSON.parse(data) : [];
+                return data ? JSON.parse(data.skills) : [];
             });
         });
 }
 
-export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployee };
+function addTeamMember(idteam, member) {
+    return fetch(`${BASE_URL}/addmember`, {
+        method: "POST",
+        body: JSON.stringify({
+            idteam: idteam,
+            member: member
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to add member");
+            }
+            return response.json().then((data) => {
+                return data.success;
+            });
+        });
+}
+
+function deleteTeamMember(idteam, memberEmail) {
+    return fetch(`${BASE_URL}/deletemember`, {
+        method: "POST",
+        body: JSON.stringify({
+            idteam: idteam,
+            member: memberEmail
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to delete member");
+            }
+            return response.json().then((data) => {
+                return data.success;
+            });
+        });
+}
+
+export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployeeSkills , addTeamMember , deleteTeamMember };

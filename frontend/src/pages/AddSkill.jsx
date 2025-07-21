@@ -3,7 +3,7 @@ import {Navbar} from "../components/Navbar";
 import {Box, Button, Checkbox, FormControlLabel, FormGroup, Grid, ThemeProvider, Typography} from "@mui/material";
 import Footer from "../components/Footer";
 import {createTheme} from "@mui/material/styles";
-import {getSkills, setSkills} from "../services/api";
+import {getEmployeeSkills, getSkills, setSkills} from "../services/api";
 
 const theme = createTheme({
     typography: {
@@ -29,6 +29,13 @@ function AddSkill(){
             setSkills(data ?? []);
         });
     }, []);
+
+    React.useEffect(() => {
+        getEmployeeSkills().then((data) => {
+            setSelectedSkills(data.map(skill => skill.idskills));
+        });
+    }, []);
+
     return (
         <Box>
             <Navbar />

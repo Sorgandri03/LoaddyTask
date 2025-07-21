@@ -95,10 +95,10 @@ app.post('/api/createteam', async (req, res) => {
     }
 })
 
-app.post('/api/employee/:idemployee', async (req, res) => {
-    const { idteam } = req.params;
+app.get('/api/employee/:employee', async (req, res) => {
+    const { employee } = req.params;
 
-    const result = await sql`select * from employee as e join have as h on e.idemployee = h.idemployee join skills as s on h.idskills = s.idskills where e.idemployee = ${idteam}`;
+    const result = await sql`select h.idskills from employee as e join have as h on e.idemployee = h.idemployee where e.email = ${employee} group by e.idemployee, h.idskills order by h.idskills`;
     if (result) {
         const skills = JSON.stringify(result);
         res.json({success: true, skills: skills});
@@ -196,6 +196,7 @@ app.post('/api/setskills', async (req, res) => {
     const { employee, skills } = req.body;
     try {
         const idemployee = await sql`select idemployee from employee where email = ${employee}`;
+        await sql`delete from have where idemployee = ${idemployee[0].idemployee}`;
         for (const skill of skills) {
             await sql`insert into have (idemployee, idskills) values (${idemployee[0].idemployee}, ${skill})`;
         }
@@ -205,5 +206,40 @@ app.post('/api/setskills', async (req, res) => {
         res.json({success: false});
     }
 });
+
+app.post('/api/addmember', async (req, res) => {
+    const { idteam, member } = req.body;
+
+    const idemployee = await sql`select idemployee from employee where email = ${member}`;
+    if(idemployee.length === 0) {
+        return res.json({success: false});
+    }
+    const existingMember = await sql`select * from partof where idteam = ${idteam} and idemployee = ${idemployee[0].idemployee}`;
+    if (existingMember.length > 0) {
+        return res.json({success: false});
+    }
+    const result = await sql`insert into partof (idteam, idemployee) values (${idteam}, ${idemployee[0].idemployee})`;
+    if (result) {
+        res.json({success: true});
+    } else {
+        res.json({success: false});
+    }
+});
+
+app.post('/api/deletemember', async (req, res) => {
+    const { idteam, member } = req.body;
+
+    const idemployee = await sql`select idemployee from employee where email = ${member}`;
+    if(idemployee.length === 0) {
+        return res.json({success: false});
+    }
+    const result = await sql`delete from partof where idteam = ${idteam} and idemployee = ${idemployee[0].idemployee}`;
+    if (result) {
+        res.json({success: true});
+    } else {
+        res.json({success: false});
+    }
+});
+
 
 app.listen(3001, () => console.log('Server running on port 3001'));

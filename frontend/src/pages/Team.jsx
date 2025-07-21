@@ -1,8 +1,8 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
-import {getSkills, getTeamById} from "../services/api";
+import {addTeamMember, deleteTeamMember, getTeamById} from "../services/api";
 import {Navbar} from "../components/Navbar";
-import {Box, ThemeProvider, Typography} from "@mui/material";
+import {Box, Button, TextField, ThemeProvider, Typography, Table, TableBody, TableRow, TableCell} from "@mui/material";
 import Footer from "../components/Footer";
 import {createTheme} from "@mui/material/styles";
 
@@ -12,17 +12,67 @@ const theme = createTheme({
     },
 });
 
+function AddMember({ addMember, setAddMember, teamId }) {
+    const [member, setMember] = React.useState(null);
+
+    function sendAddMember(idteam, member) {
+        addTeamMember(idteam, member).then((response) => {
+            if (response) {
+                alert("Member added successfully");
+                window.location.reload();
+            } else {
+                alert("Failed to add member");
+            }
+        });
+    }
+
+    if (addMember) {
+        return (
+            <React.Fragment>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, maxWidth: 400, alignItems: "flex-start" }}>
+                    <br />
+                    <TextField
+                        id="member-email"
+                        label="Member Email"
+                        variant="outlined"
+                        type="text"
+                        value={member}
+                        onChange={(e) => setMember(e.target.value)}
+                    />
+                    <Button variant="contained" onClick={() => sendAddMember(teamId, member)}>
+                        Add Member
+                    </Button>
+                </Box>
+            </React.Fragment>
+        );
+    }
+    else {
+        return (
+            <Button variant="contained" onClick={() => setAddMember(true)}>
+                Add Member
+            </Button>
+        );
+    }
+}
+
+function DeleteMember(idteam, memberEmail) {
+    deleteTeamMember(idteam, memberEmail).then((response) => {
+        if (response) {
+            alert("Member deleted successfully");
+            window.location.reload();
+        } else {
+            alert("Failed to delete member");
+        }
+    });
+}
+
 function Team(){
     const { idteam } = useParams();
+    const [addMember, setAddMember] = React.useState(false);
     const [team, setTeam] = React.useState(null);
     React.useEffect(() => {
         getTeamById(idteam).then((data) => {
             setTeam(data);
-            let skills = [];
-            for (let i = 0; i < data.length; i++) {
-                skills.push(getSkills([i].name));
-            }
-            console.log(skills);
         });
     }, [idteam]);
 
@@ -40,12 +90,32 @@ function Team(){
                         <p></p>
                         <Typography variant="body1">Members:</Typography>
                         <Box component="ul" sx={{ pl: 2 }}>
-                            {team.map((member, skills) => (
-                                <Box component="li" key={member.idemployee} sx={{ listStyle: "disc" }}>
-                                    {member.email}&nbsp;&nbsp;&nbsp;&nbsp;
-                                </Box>
+                            {team.map((member) => (
+                                <Table sx={{ minWidth: 300 }}>
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell>{member.email}</TableCell>
+                                            <TableCell align="right">
+                                                <Button
+                                                    variant="contained"
+                                                    size="small"
+                                                    sx={{
+                                                        backgroundColor: '#b23b3b',
+                                                        minWidth: 0,
+                                                        px: 1,
+                                                        alignSelf: "center"
+                                                    }}
+                                                    onClick={() => DeleteMember(idteam, member.email)}
+                                                >
+                                                    Delete Member
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
                             ))}
                         </Box>
+                        <AddMember addMember={addMember} setAddMember={setAddMember} teamId={idteam} />
                     </ThemeProvider>
                 </Box>
                 <Footer />
