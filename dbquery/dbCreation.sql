@@ -63,16 +63,10 @@ CREATE TABLE IF NOT EXISTS task
     startDate   DATE,
     endDate     DATE,
     weight      INT DEFAULT 0,
+    require INT REFERENCES skills (idSkills) on delete cascade on update cascade,
     status      VARCHAR(50) CHECK (status IN ('not assigned', 'assigned', 'compleated')),
     emailEmployee  VARCHAR REFERENCES employee (email) on delete cascade on update cascade,
     job       INT REFERENCES job (idJob) on delete cascade on update cascade
-);
-
-CREATE TABLE IF NOT EXISTS require
-(
-    idSkills INT REFERENCES skills (idSkills) on delete cascade on update cascade,
-    idTask   INT REFERENCES task (idTask) on delete cascade on update cascade,
-    PRIMARY KEY (idSkills, idTask)
 );
 
 CREATE TABLE IF NOT EXISTS have
