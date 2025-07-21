@@ -81,6 +81,9 @@ VALUES ('Frank', 'Miller', '1988-06-15', '1111111111', 'frank.miller@example.com
        ('Donna', 'Ramirez', '1992-08-08', '1819202122', 'donna.ramirez@example.com', 'palle'),
        ('Kevin', 'Lewis', '1983-09-09', '1920212223', 'kevin.lewis@example.com', 'palle');
 
+INSERT INTO job (name, description, assingedTeam)
+VALUES ('Sviluppo Frontend', 'Realizzazione interfaccia utente', 1);
+
 INSERT INTO task (name, description, startdate, enddate, status, emailEmployee, job)
 VALUES ('task 1', 'Description of task 1', '2023-01-01', '2023-01-10', 'compleated', 'brandon.clark@example.com', 1),
        ('task 2', 'Description of task 2', '2023-02-01', '2023-02-15', 'assigned', 'brandon.clark@example.com', 1),
@@ -129,8 +132,6 @@ VALUES ('Team A', 'Description of Team A', 'hank.ivy@example.com'),
        ('Team J', 'Description of Team J', 'hank.ivy@example.com');
 
 
-INSERT INTO job (name, description, assingedTeam)
-VALUES ('Sviluppo Frontend', 'Realizzazione interfaccia utente', 1);
 
 INSERT INTO partof (idteam, emailEmployee)
 VALUES (1, 'brandon.clark@example.com');
