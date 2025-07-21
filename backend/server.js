@@ -225,4 +225,20 @@ app.post('/api/addmember', async (req, res) => {
     }
 });
 
+app.post('/api/deletemember', async (req, res) => {
+    const { idteam, member } = req.body;
+
+    const idemployee = await sql`select idemployee from employee where email = ${member}`;
+    if(idemployee.length === 0) {
+        return res.json({success: false});
+    }
+    const result = await sql`delete from partof where idteam = ${idteam} and idemployee = ${idemployee[0].idemployee}`;
+    if (result) {
+        res.json({success: true});
+    } else {
+        res.json({success: false});
+    }
+});
+
+
 app.listen(3001, () => console.log('Server running on port 3001'));
