@@ -16,8 +16,6 @@ CREATE TABLE IF NOT EXISTS employee
     birthDate  DATE,
     cellphone  VARCHAR(15),
     password   VARCHAR(50) NOT NULL
-
-
 );
 
 CREATE TABLE IF NOT EXISTS employer
@@ -30,6 +28,24 @@ CREATE TABLE IF NOT EXISTS employer
     password   VARCHAR(50) NOT NULL
 
 );
+
+CREATE TABLE IF NOT EXISTS team
+(
+    idTeam      serial PRIMARY KEY,
+    name        VARCHAR(50) NOT NULL,
+    description TEXT,
+    emailEmployer  VARCHAR NOT NULL REFERENCES employer (email) on delete cascade on update cascade
+
+);
+
+CREATE TABLE IF NOT EXISTS job
+(
+    idJob       serial PRIMARY KEY,
+    name        VARCHAR(50) NOT NULL,
+    description TEXT,
+    assingedTeam INT REFERENCES team (idTeam) on delete cascade on update cascade
+);
+
 
 CREATE TABLE IF NOT EXISTS skills
 (
@@ -47,7 +63,8 @@ CREATE TABLE IF NOT EXISTS task
     endDate     DATE,
     weight      INT DEFAULT 0,
     status      VARCHAR(50) CHECK (status IN ('not assigned', 'assigned', 'compleated')),
-    emailEmployee  VARCHAR REFERENCES employee (email)
+    emailEmployee  VARCHAR REFERENCES employee (email) on delete cascade on update cascade,
+    job       INT REFERENCES job (idJob) on delete cascade on update cascade
 );
 
 CREATE TABLE IF NOT EXISTS require
@@ -64,14 +81,7 @@ CREATE TABLE IF NOT EXISTS have
     PRIMARY KEY (emailEmployee, idSkills)
 );
 
-CREATE TABLE IF NOT EXISTS team
-(
-    idTeam      serial PRIMARY KEY,
-    name        VARCHAR(50) NOT NULL,
-    description TEXT,
-    emailEmployer  VARCHAR NOT NULL REFERENCES employer (email) on delete cascade on update cascade
 
-);
 
 CREATE TABLE IF NOT EXISTS partOf
 (
