@@ -1,0 +1,2 @@
+docker build -t flask_algo_test . (from the directory containing the Dockerfile)
+docker run -p 8000:8000 flask_algo_test
