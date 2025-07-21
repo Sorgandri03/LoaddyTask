@@ -227,7 +227,26 @@ app.post('/api/deletemember', async (req, res) => {
     }
 });
 
+app.post('api/teamsjobs', async (req, res) => {
+    const { idteam } = req.body;
+    const result = await sql`select * from job where idteam = ${idteam}`;
+    if (result) {
+        const jobs = JSON.stringify(result);
+        res.json({success: true, jobs: jobs});
+    } else {
+        res.json({success: false});
+    }
+});
 
+app.post('/api/createteamjob', async (req, res) => {
+    const { idteam, name, description } = req.body;
+    const result = await sql`insert into job (idteam, name, description) values (${idteam}, ${name}, ${description}) returning idjob`;
+    if (result) {
+        res.json({success: true, idjob: result[0].idjob});
+    } else {
+        res.json({success: false});
+    }   
+});
 
 
 app.listen(3001, () => console.log('Server running on port 3001'));
