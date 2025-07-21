@@ -6,6 +6,7 @@ drop table if exists employer cascade;
 drop table if exists skills cascade;
 drop table if exists employee cascade;
 drop table if exists partOf cascade;
+drop table if exists job cascade;
 
 
 CREATE TABLE IF NOT EXISTS employee
