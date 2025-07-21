@@ -152,6 +152,8 @@ function Team(){
                             ))}
                         </Box>
                         <AddMember addMember={addMember} setAddMember={setAddMember} teamId={idteam} />
+                        <br /><br />
+                        <Button variant="contained" onClick={}>Create job</Button>
                     </ThemeProvider>
                 </Box>
                 <Footer />
