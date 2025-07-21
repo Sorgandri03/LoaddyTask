@@ -1,11 +1,11 @@
 import sys
+import json
 ListOfEmployees = [
     {"name": "bob", "skills": ["python", "java"]},
     {"name": "alice", "skills": ["c++", "javascript", "python"]},
     {"name": "charlie", "skills": ["java", "c++", "python"]}
 ]
-for employee in range (len(ListOfEmployees)):
-    ListOfEmployees[employee]["workload"] = 0
+
 
 tasksList = [
     {"name": "task1", "language": "python", "weight": 3},
@@ -15,8 +15,12 @@ tasksList = [
 ]
 
 
-def customloadbalance(ListOfEmployees, tasksList):
+def customloadbalance(ListOfEmployees_json, tasksList_json):
     resault = []
+    ListOfEmployees = json.loads(ListOfEmployees_json)
+    tasksList = json.loads(tasksList_json)
+    for employee in range (len(ListOfEmployees)):
+        ListOfEmployees[employee]["workload"] = 0
 
 
     ListOfEmployees.sort(key=lambda x: len(x["skills"]), reverse=True)
