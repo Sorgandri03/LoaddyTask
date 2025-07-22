@@ -59,6 +59,9 @@ function Skills(member) {
 }
 
 function createTask(name, desc, endDate, weight, selected, prevTasks, setTask) {
+    if( name === "" || desc === "" || endDate === "" || weight === 0 || selected.length === 0) {
+        return;
+    }
     let task = [];
     task.push(name);
     task.push(desc);
@@ -68,14 +71,32 @@ function createTask(name, desc, endDate, weight, selected, prevTasks, setTask) {
     setTask(prevTasks => [...prevTasks, task]);
 }
 
-function createJob(tasks) {
-    console.log(tasks);
+function createJob(name, description, tasks, skills, idteam) {
+    if (name === "" || description === "" || tasks.length === 0) {
+        alert("Please fill all fields before creating a job.");
+        return;
+    }
+    for (const task in tasks){
+        tasks[task][4] = tasks[task][4].map(skill => {
+            const skillObj = skills.find(s => s.name === skill);
+            return skillObj ? skillObj.idskills : null;
+        }).filter(id => id !== null);
+    }
+    const job = {
+        name: name,
+        description: description,
+        tasks: tasks,
+        idteam: idteam
+    };
+    console.log(job);
 }
 
-function AddTask() {
+function AddTask(idteam) {
     const [tasks, setTask] = React.useState([]);
     const [name, setName] = React.useState("");
     const [desc, setDesc] = React.useState("");
+    const [nameJ, setNameJ] = React.useState("");
+    const [descJ, setDescJ] = React.useState("");
     const oneWeekFromNow = new Date();
     oneWeekFromNow.setHours(oneWeekFromNow.getHours() + 168);
     const [endDate, setEndDate] = React.useState(oneWeekFromNow.toISOString().split('T')[0]);
@@ -93,6 +114,10 @@ function AddTask() {
     };
 
     const emptyTask = () => {
+        if( name === "" || desc === "" || endDate === "" || weight === 0 || selected.length === 0) {
+            alert("Please fill all fields before adding a task.");
+            return;
+        }
         setName("");
         setDesc("");
         setEndDate(oneWeekFromNow.toISOString().split('T')[0]);
@@ -118,15 +143,21 @@ function AddTask() {
                             </React.Fragment>
                         ))}
                         { tasks.length > 0 && (
-                            <Button variant="contained" color="primary" sx={{ justifyContent: 'center', mb: 4 }} onClick={() => {createJob(tasks)}}>
-                                Create New Job
-                            </Button>
+                            <React.Fragment>
+                                <Box sx={{ display: 'flex', gap: 2, mb: 5 }}>
+                                    <TextField type="text" label="Job Name" style={{ width: 150 }} value={nameJ} onChange={(e)=> setNameJ(e.target.value)} />
+                                    <TextField type="text" label="Job Description" style={{ flex: 2 }} value={descJ} onChange={(e)=> setDescJ(e.target.value)}/>
+                                    <Button variant="contained" color="primary" sx={{ justifyContent: 'center' }} onClick={() => {createJob(nameJ, descJ, tasks, skills, idteam)}}>
+                                        Create New Job
+                                    </Button>
+                                </Box>
+                            </React.Fragment>
                         )}
                         <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
                             <TextField type="text" label="Task Name" style={{ width: 150 }} value={name} onChange={(e)=> setName(e.target.value)} />
                             <TextField type="text" label="Description" style={{ flex: 2 }} value={desc} onChange={(e)=> setDesc(e.target.value)}/>
                             <TextField type="date" label="End Date" style={{ width: 160 }} value={endDate} onChange={(e)=> setEndDate(e.target.value)}/>
-                            <TextField type="number" label="Weight" style={{ width: 120 }} slotProps={{ htmlInput: {min: 0, max: 10} }} value={weight} onChange={(e)=> setWeight(e.target.value)}/>
+                            <TextField type="number" label="Weight" style={{ width: 120 }} slotProps={{ htmlInput: {min: 1, max: 10} }} value={weight} onChange={(e)=> setWeight(e.target.value)}/>
                             <FormControl sx={{ width: 300 }}>
                                 <InputLabel id="skills-multi-label">Skills</InputLabel>
                                 <Select
@@ -195,7 +226,7 @@ function CreateJob(){
                         </Box>
                     </ThemeProvider>
                 </Box>
-                <AddTask />
+                <AddTask idteam={idteam}/>
                 <Footer />
             </Box>
         );

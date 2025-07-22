@@ -224,4 +224,27 @@ function deleteTeamMember(idteam, memberEmail) {
         });
 }
 
-export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployeeSkills , addTeamMember , deleteTeamMember };
+function createJob(name, description, tasks, idteam) {
+    return fetch(`${BASE_URL}/createjob`, {
+        method: "POST",
+        body: JSON.stringify({
+            name: name,
+            description: description,
+            tasks: tasks,
+            idteam: idteam
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to create job");
+            }
+            return response.json().then((data) => {
+                return data.success;
+            });
+        });
+}
+
+export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployeeSkills , addTeamMember , deleteTeamMember , createJob };
