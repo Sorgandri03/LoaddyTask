@@ -83,7 +83,7 @@ app.post('/api/teams/:idteam', async (req, res) => {
 
 app.post('/api/createteam', async (req, res) => {
     const { name, description, employer } = req.body;
-    const createTeam = await sql`insert into team (name, description, email) values (${name}, ${description}, ${employer}) returning idteam`;
+    const createTeam = await sql`insert into team (name, description, emailemployer) values (${name}, ${description}, ${employer}) returning idteam`;
     if (createTeam.length > 0) {
         res.json({ success: true, idteam: createTeam[0].idteam });
     } else {
@@ -238,7 +238,7 @@ app.post('api/teamsjobs', async (req, res) => {
     }
 });
 
-app.post('/api/createteamjob', async (req, res) => {
+app.post('/api/createjob', async (req, res) => {
     const { idteam, name, description } = req.body;
     const result = await sql`insert into job (idteam, name, description) values (${idteam}, ${name}, ${description}) returning idjob`;
     if (result) {
