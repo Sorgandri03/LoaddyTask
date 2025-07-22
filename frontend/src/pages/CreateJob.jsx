@@ -1,6 +1,6 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
-import {getEmployeeSkills, getSkills, getTeamById} from "../services/api";
+import {getEmployeeSkills, getSkills, getTeamById, createTeamJob} from "../services/api";
 import {Navbar} from "../components/Navbar";
 import {
     Box,
@@ -76,11 +76,9 @@ function createJob(name, description, tasks, skills, idteam) {
         alert("Please fill all fields before creating a job.");
         return;
     }
-    for (const task in tasks){
-        tasks[task][4] = tasks[task][4].map(skill => {
-            const skillObj = skills.find(s => s.name === skill);
-            return skillObj ? skillObj.idskills : null;
-        }).filter(id => id !== null);
+    for (const task of tasks) {
+        const found = skills.findIndex((x) => x.name === task[4]);
+        task[4] = skills[found].idskills;
     }
     const job = {
         name: name,
@@ -88,7 +86,14 @@ function createJob(name, description, tasks, skills, idteam) {
         tasks: tasks,
         idteam: idteam
     };
-    console.log(job);
+    createTeamJob(job).then((response) => {
+        if (response) {
+            alert("Job created successfully!");
+            window.location.replace(`/dashboard`);
+        } else {
+            alert("Failed to create job. Please try again.");
+        }
+    });
 }
 
 function AddTask(idteam) {
@@ -100,7 +105,7 @@ function AddTask(idteam) {
     const oneWeekFromNow = new Date();
     oneWeekFromNow.setHours(oneWeekFromNow.getHours() + 168);
     const [endDate, setEndDate] = React.useState(oneWeekFromNow.toISOString().split('T')[0]);
-    const [selected, setSelected] = React.useState([]);
+    const [selected, setSelected] = React.useState("");
     const [weight, setWeight] = React.useState(0);
     const [skills, setSkills] = React.useState([]);
     React.useEffect(() => {
@@ -109,12 +114,8 @@ function AddTask(idteam) {
         });
     }, []);
 
-    const handleChange = (event) => {
-        setSelected(event.target.value);
-    };
-
     const emptyTask = () => {
-        if( name === "" || desc === "" || endDate === "" || weight === 0 || selected.length === 0) {
+        if( name === "" || desc === "" || endDate === "" || weight === 0 || selected === "") {
             alert("Please fill all fields before adding a task.");
             return;
         }
@@ -122,7 +123,7 @@ function AddTask(idteam) {
         setDesc("");
         setEndDate(oneWeekFromNow.toISOString().split('T')[0]);
         setWeight(0);
-        setSelected([]);
+        setSelected("");
     }
 
     return (
@@ -137,7 +138,7 @@ function AddTask(idteam) {
                                     <TextField disabled type="text" label="Description" style={{ flex: 2 }} value={task[1]} />
                                     <TextField disabled type="date" label="End Date" style={{ width: 160 }} value={task[2]} />
                                     <TextField disabled type="number" label="Weight" style={{ width: 120 }} value={task[3]} />
-                                    <TextField disabled type="text" label="Skills" style={{ width: 300 }} value={task[4].join(', ')} />
+                                    <TextField disabled type="text" label="Skills" style={{ width: 300 }} value={task[4]} />
                                 </Box>
                                 <br />
                             </React.Fragment>
@@ -163,12 +164,11 @@ function AddTask(idteam) {
                                 <Select
                                     labelId="skills-multi-label"
                                     id="skills-multi"
-                                    multiple
                                     value={selected}
-                                    onChange={handleChange}
+                                    onChange={(e)=> setSelected(e.target.value)}
                                     input={<OutlinedInput label="Skills" />}
                                     variant="outlined"
-                                    renderValue={(selected) => selected.join(', ')}
+                                    renderValue={(selected) => selected}
                                 >
                                     {skills.map((skill) => (
                                         <MenuItem key={skill.idskills} value={skill.name}>
@@ -182,7 +182,7 @@ function AddTask(idteam) {
                 </ThemeProvider>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Button variant="contained" color="primary" sx={{ justifyContent: 'center' }} onClick={() => {createTask(name, desc, endDate, weight, selected, tasks, setTask); emptyTask();}}>
+                <Button variant="contained" color="primary" sx={{ justifyContent: 'center', mb: 10 }} onClick={() => {createTask(name, desc, endDate, weight, selected, tasks, setTask); emptyTask();}}>
                     Add Task
                 </Button>
             </Box>

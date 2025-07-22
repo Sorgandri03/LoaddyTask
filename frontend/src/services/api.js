@@ -224,14 +224,33 @@ function deleteTeamMember(idteam, memberEmail) {
         });
 }
 
-function createJob(name, description, tasks, idteam) {
+function createTeamJob(job) {
+    const name = job.name;
+    const description = job.description;
+    const tasks = job.tasks;
+    const idteam = job.idteam;
+    let employees = [];
+    getTeamById(idteam.idteam).then(team => {
+        if (!team || team.length === 0) {
+            throw new Error("Team not found");
+        }
+        for (const member of team) {
+            getEmployeeSkills(member.email).then((skills) => {
+                employees.push({
+                    email: member.email,
+                    skills: skills
+                });
+            })
+        }
+    });
     return fetch(`${BASE_URL}/createjob`, {
         method: "POST",
         body: JSON.stringify({
             name: name,
             description: description,
+            idteam: idteam,
             tasks: tasks,
-            idteam: idteam
+            employees: employees
         }),
         headers: {
             "Content-Type": "application/json"
@@ -247,4 +266,4 @@ function createJob(name, description, tasks, idteam) {
         });
 }
 
-export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployeeSkills , addTeamMember , deleteTeamMember , createJob };
+export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployeeSkills , addTeamMember , deleteTeamMember , createTeamJob };
