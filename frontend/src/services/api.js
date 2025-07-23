@@ -284,5 +284,19 @@ function getTeamJobs(idteam) {
             });
         });
 }
+function getEmployeeTasks(email, teamId) {
+    return fetch(`${BASE_URL}/tasks?email=${email}&teamId=${teamId}`)
+        .then((response) => response.json())
+        .then((data) => {
+            if (!data || !data.tasks) {
+                throw new Error("Failed to fetch employee tasks");
+            }
+            return JSON.parse(data.tasks);
+        })
+        .catch((e) => {
+            console.error("Failed to fetch employee tasks", e);
+            return [];
+        });
+}
 
-export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployeeSkills , addTeamMember , deleteTeamMember , createTeamJob , getJob , getTeamJobs };
+export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployeeSkills , addTeamMember , deleteTeamMember , createTeamJob , getJob , getTeamJobs, getEmployeeTasks };

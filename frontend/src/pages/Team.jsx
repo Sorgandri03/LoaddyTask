@@ -7,12 +7,15 @@ import {
     getJob,
     getSkills,
     getTeamById,
-    getTeamJobs
+    getTeamJobs,
+    getEmployeeTasks
+    
 } from "../services/api";
 import {Navbar} from "../components/Navbar";
 import {Box, Button, TextField, ThemeProvider, Typography, Table, TableBody, TableRow, TableCell} from "@mui/material";
 import Footer from "../components/Footer";
 import {createTheme} from "@mui/material/styles";
+import {useState, useEffect} from "react";
 
 const theme = createTheme({
     typography: {
@@ -108,6 +111,27 @@ function Skills(member) {
         </>
     );
 }
+function EmployeeTasks(member){
+    const [tasks, setTasks] = useState([]);
+    const { idteam } = useParams();
+
+    useEffect(() => {
+        getEmployeeTasks(member.member, idteam).then((data) => {
+            setTasks(data);
+        });
+    }, [member, idteam]);
+
+    return (
+        <Box component="ul" sx={{ pl: 2 }}>
+            {tasks.map((task) => (
+                <li key={task.idtask}>
+                    <Typography variant="body1">{task.description}</Typography>
+                </li>
+            ))}
+        </Box>
+    );
+}
+                    
 
 function ViewJobs({ idteam }) {
     const [jobs, setJobs] = React.useState([]);
@@ -208,6 +232,9 @@ function Team(){
             <Box sx={{ p: 4 }}>
                 <ThemeProvider theme={theme}>
                     <Typography variant="h4">Team {idteam}</Typography>
+                    <p></p>
+                    <Typography variant="body1">Tasks:</Typography>
+                    <EmployeeTasks member={localStorage.getItem("user")} />
                 </ThemeProvider>
             </Box>
             <Footer />

@@ -62,6 +62,8 @@ app.post('/api/teams/:idteam', async (req, res) => {
     let checkMember;
     if (role === 'employee') {
         checkMember = await sql`select e.email from employee as e join partof as p on e.email = p.emailemployee join team as t on p.idteam = t.idteam where t.idteam = ${idteam} and e.email = ${member}`;
+        const employeeTasks = await sql`select * from task where emailemployee = ${member}`;
+        let tasksArray = employeeTasks.map(task => task);
     } else if (role === 'employer') {
         checkMember = await sql`select emailemployer from team where idteam = ${idteam} and emailemployer = ${member}`;
     } else {
@@ -264,6 +266,21 @@ app.get('/api/getteamjobs/:idteam', async (req, res) => {
         res.json({success: false});
     }
 })
+
+app.get('/api/tasks', async (req, res) => {
+    const { email, teamId } = req.query;
+    try {
+        const tasks = await sql`
+            select t.* from task t
+            join job j on t.job = j.idjob
+            where t.emailemployee = ${email} and j.assingedteam = ${teamId}
+        `;
+        res.json({ success: true, tasks: JSON.stringify(tasks) });
+    } catch (error) {
+        console.error('Error fetching employee tasks:', error);
+        res.json({ success: false });
+    }
+});
 
 app.get('/api/test', async (req, res) => {
     if (result1 && result2) {
