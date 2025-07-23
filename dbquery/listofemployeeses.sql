@@ -13,5 +13,5 @@ FROM (
     JOIN team t ON pf.idTeam = t.idTeam
     JOIN job j ON t.idTeam = j.assingedTeam
     WHERE j.idjob = 1 -- job 1 to be replaced with a variable
-    GROUP BY e.name
+    GROUP BY e.email
 ) AS subquery;
