@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  notification-service:
+    build: .
+    ports:
+      - "3002:3002"
+    environment:
+      - DB_HOST=localhost  # Для подключения к локальной PostgreSQL
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=loaddy_db
+    restart: unless-stopped
