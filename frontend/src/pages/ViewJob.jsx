@@ -1,6 +1,6 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
-import {getEmployeeSkills, getJob, getSkills, getTeamById, sendToAlgorithm} from "../services/api";
+import {getEmployeeSkills, getJob, getSkills, getTeamById, sendToAlgorithm, sendNotification    } from "../services/api";
 import {Navbar} from "../components/Navbar";
 import {
     Box,
@@ -67,6 +67,9 @@ function Algorithm(idjob) {
             alert("Failed to assign tasks");
         }
     });
+}
+function Notify(idjob) {
+
 }
 
 function ViewJob(){
@@ -194,13 +197,21 @@ function ViewJob(){
                             </Table>
                         </Box>
                         <Grid display="flex" justifyContent="center" sx={{ marginTop: "30px", mb: 10 }}>
-                            <Button
+                            <Button sx={{ mr: 2 }}
                                 type="submit"
                                 id="submit"
                                 variant="contained"
                                 size="large"
                                 onClick={() => Algorithm(idjob)}>
                                 Send to Auto Assign
+                            </Button>
+                                                        <Button
+                                type="submit"
+                                id="sub2"
+                                variant="contained"
+                                size="large"
+                                onClick={() => Notify(idjob)}>
+                                Send notification
                             </Button>
                         </Grid>
                     </ThemeProvider>
@@ -209,6 +220,7 @@ function ViewJob(){
             </Box>
         );
     }
+    
     return (
         <Box>
             <Navbar />

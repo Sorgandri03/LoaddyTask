@@ -9,6 +9,14 @@ services:
       - "8000:8000"
     networks:
       - my-network
+  notification-service:
+    container_name: notification-container
+    build:
+      context: ./notification
+    ports:
+      - "3002:3002"
+    networks:
+      - my-network
 
 networks:
   my-network:
