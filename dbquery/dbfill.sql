@@ -114,15 +114,15 @@ INSERT INTO job (name, description, assingedTeam)
 VALUES ('Sviluppo Frontend', 'Realizzazione interfaccia utente', 1);
 
 INSERT INTO task (name, description, startdate, enddate, status, emailEmployee, job, require)
-VALUES ('task 1', 'Description of task 1', '2023-01-01', '2023-01-10', 'compleated', 'brandon.clark@example.com', 1, 1),
+VALUES ('task 1', 'Description of task 1', '2023-01-01', '2023-01-10', 'assigned', 'brandon.clark@example.com', 1, 1),
        ('task 2', 'Description of task 2', '2023-02-01', '2023-02-15', 'assigned', 'brandon.clark@example.com', 1, 2),
-       ('task 3', 'Description of task 3', '2023-03-01', '2023-03-20', 'not assigned', 'brandon.clark@example.com', 1,3),
-       ('task 4', 'Description of task 4', '2023-04-01', '2023-04-25', 'compleated', 'brandon.clark@example.com', 1,4),
+       ('task 3', 'Description of task 3', '2023-03-01', '2023-03-20', 'not assigned',null, 1,3),
+       ('task 4', 'Description of task 4', '2023-04-01', '2023-04-25', 'assigned', 'brandon.clark@example.com', 1,4),
        ('task 5', 'Description of task 5', '2023-05-01', '2023-05-30', 'assigned', 'brandon.clark@example.com', 1,5),
-       ('task 6', 'Description of task 6', '2023-06-01', '2023-06-15', 'not assigned', 'brandon.clark@example.com', 1,6),
-       ('task 7', 'Description of task 7', '2023-07-01', '2023-07-20', 'compleated', 'brandon.clark@example.com', 1,7),
+       ('task 6', 'Description of task 6', '2023-06-01', '2023-06-15', 'not assigned',null, 1,6),
+       ('task 7', 'Description of task 7', '2023-07-01', '2023-07-20', 'assigned', 'brandon.clark@example.com', 1,7),
        ('task 8', 'Description of task 8', '2023-08-01', '2023-08-25', 'assigned', 'brandon.clark@example.com', 1,8),
-       ('task 9', 'Description of task 9', '2023-09-01', '2023-09-10', 'not assigned', 'brandon.clark@example.com', 1,9);
+       ('task 9', 'Description of task 9', '2023-09-01', '2023-09-10', 'not assigned',null, 1,9);
 
 
 INSERT INTO partof (idteam, emailEmployee)
