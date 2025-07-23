@@ -9,6 +9,7 @@ import Team from "./pages/Team";
 import PrivateRoute from "./components/PrivateRoute";
 import AddSkill from "./pages/AddSkill";
 import CreateJob from "./pages/CreateJob";
+import ViewJob from "./pages/ViewJob";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -23,6 +24,7 @@ root.render(
                 <Route path='/create-team' element={<PrivateRoute> <CreateTeam /> </PrivateRoute>} />
                 <Route path='/add-skill' element={<PrivateRoute> <AddSkill /> </PrivateRoute>} />
                 <Route path='/create-job/:idteam' element={<PrivateRoute> <CreateJob /> </PrivateRoute>} />
+                <Route path='/view-job/:idjob' element={<PrivateRoute> <ViewJob /> </PrivateRoute>} />
             </Routes>
         </div>
     </Router>

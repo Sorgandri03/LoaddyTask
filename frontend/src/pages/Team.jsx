@@ -4,7 +4,6 @@ import {
     addTeamMember,
     deleteTeamMember,
     getEmployeeSkills,
-    getJob,
     getSkills,
     getTeamById,
     getTeamJobs,

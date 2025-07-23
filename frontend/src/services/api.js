@@ -284,6 +284,7 @@ function getTeamJobs(idteam) {
             });
         });
 }
+
 function getEmployeeTasks(email, teamId) {
     return fetch(`${BASE_URL}/tasks?email=${email}&teamId=${teamId}`)
         .then((response) => response.json())
@@ -298,6 +299,7 @@ function getEmployeeTasks(email, teamId) {
             return [];
         });
 }
+
 function taskcompleated(taskId) {
     return fetch(`${BASE_URL}/taskcompleted`, {
         method: "POST",
@@ -315,7 +317,8 @@ function taskcompleated(taskId) {
             return data.success;
         });
     }
-    function undotaskcompleated(taskId) {
+
+function undotaskcompleated(taskId) {
         return fetch(`${BASE_URL}/undotaskcompleted`, {
             method: "POST",
             headers: {
@@ -332,4 +335,25 @@ function taskcompleated(taskId) {
                 return data.success;
             });
     }
-export { sendLogin, sendSignup, getTeams, getTeamById, createTeam, getSkills, setSkills, getEmployeeSkills, addTeamMember, deleteTeamMember, createTeamJob, getJob, getTeamJobs, getEmployeeTasks, taskcompleated, undotaskcompleated };
+
+function sendToAlgorithm(idjob) {
+    return fetch(`${BASE_URL}/algorithm`, {
+        method: "POST",
+        body: JSON.stringify({
+            idjob: idjob
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to send data to algorithm");
+            }
+            return response.json().then((data) => {
+                return data ? JSON.parse(data) : [];
+            });
+        });
+}
+
+export { sendLogin, sendSignup, getTeams, getTeamById, createTeam, getSkills, setSkills, getEmployeeSkills, addTeamMember, deleteTeamMember, createTeamJob, getJob, getTeamJobs, getEmployeeTasks, taskcompleated, undotaskcompleated , sendToAlgorithm };

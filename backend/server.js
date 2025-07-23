@@ -106,16 +106,6 @@ app.get('/api/employee/:employee', async (req, res) => {
     }
 })
 
-app.post('/test', async (req, res) => {
-    const result = await sql`select * from employee`;
-    if (result) {
-        const teams = JSON.stringify(result);
-        res.json({success: true, teams: teams});
-    } else {
-        res.json({success: false});
-    }
-});
-
 app.post('/api/notificate', async (req, res) => {
     const tasks = await sql`
         SELECT
@@ -281,6 +271,7 @@ app.get('/api/tasks', async (req, res) => {
         res.json({ success: false });
     }
 });
+
 app.post('/api/taskcompleted', async (req, res) => {
     const { taskId } = req.body;
     try {
@@ -296,6 +287,7 @@ app.post('/api/taskcompleted', async (req, res) => {
         res.json({ success: false });
     }
 });
+
 app.post('/api/undotaskcompleted', async (req, res) => {
     const { taskId } = req.body;
     try {
@@ -311,20 +303,47 @@ app.post('/api/undotaskcompleted', async (req, res) => {
         res.json({ success: false });
     }
 });
-app.get('/api/test', async (req, res) => {
-    if (result1 && result2) {
-        const employees = JSON.stringify(result1);
-        const tasks = JSON.stringify(result2);
-        const algorithmResponse = await fetch('http://localhost:8000/algorithm', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({employees: employees, tasks: tasks})
-        });
-        const algorithmResult = await algorithmResponse.json();
-        res.json({success: true, tasks: tasks});
-    } else {
-        res.json({success: false});
-    }
+
+app.post('/api/algorithm', async (req, res) => {
+    const { idjob } = req.body;
+
+    const queryemp = await sql`SELECT json_agg(json_build_object(
+            'email', email,
+            'skills', skills
+                )) AS result
+                FROM (
+                 SELECT
+                     e.email,
+                     array_agg(s.name ORDER BY s.name) AS skills
+                 FROM employee AS e
+                          JOIN have h ON e.email = h.emailEmployee
+                          JOIN skills s ON h.idSkills = s.idSkills
+                          JOIN partof pf ON pf.emailemployee = e.email
+                          JOIN team t ON pf.idTeam = t.idTeam
+                          JOIN job j ON t.idTeam = j.assingedTeam
+                 WHERE j.idjob = ${idjob} -- job 1 to be replaced with a variable
+                 GROUP BY e.email
+             ) AS subquery;`
+    const querytas = await sql`SELECT json_agg(json_build_object(
+            'idTask', idTask,
+            'language', skill,
+            'weight', weight
+            )) AS result FROM(
+             SELECT t.idTask as idTask, s.name AS skill, t.weight
+             FROM task t
+                      JOIN skills s ON t.require = s.idSkills
+                      JOIN job j ON t.job = j.idJob
+             WHERE job = ${idjob}) as subquery;`
+
+    const algorithmResponse = await fetch('http://localhost:8000/algorithm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({employees: queryemp[0].result, tasks: querytas[0].result})
+    });
+
+    const algorithmResult = await algorithmResponse.json();
+    console.log('Algorithm result:', algorithmResult);
+    //res.json({success: true, assignment: algorithmResult});
 });
 
 app.listen(3001, () => console.log('Server running on port 3001'));

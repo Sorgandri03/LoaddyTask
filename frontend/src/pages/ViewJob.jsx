@@ -1,8 +1,19 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
-import {getEmployeeSkills, getJob, getSkills, getTeamById} from "../services/api";
+import {getEmployeeSkills, getJob, getSkills, getTeamById, sendToAlgorithm} from "../services/api";
 import {Navbar} from "../components/Navbar";
-import {Box, Button, TextField, ThemeProvider, Typography, Table, TableBody, TableRow, TableCell} from "@mui/material";
+import {
+    Box,
+    Button,
+    TextField,
+    ThemeProvider,
+    Typography,
+    Table,
+    TableBody,
+    TableRow,
+    TableCell,
+    Grid
+} from "@mui/material";
 import Footer from "../components/Footer";
 import {createTheme} from "@mui/material/styles";
 
@@ -47,20 +58,53 @@ function Skills(member) {
     );
 }
 
+function Algorithm(idjob) {
+    sendToAlgorithm(idjob).then((response) => {
+        if (response) {
+            alert("Tasks assigned successfully");
+            window.location.reload();
+        } else {
+            alert("Failed to assign tasks");
+        }
+    });
+}
+
 function ViewJob(){
     const { idjob } = useParams();
     const [job, setJob] = React.useState(null);
+    const [tasks, setTasks] = React.useState([]);
+    const [team, setTeam] = React.useState([]);
+    const [skills, setSkills] = React.useState([]);
+    React.useEffect(() => {
+        getSkills().then((response) => {
+            setSkills(response);
+        });
+    }, []);
     React.useEffect(() => {
         getJob(idjob).then((data) => {
-            setJob(data);
+            const jobarray = (JSON.parse(data.job));
+            setJob(jobarray[0]);
+            for (const task of jobarray) {
+                let element = [];
+                element.name = task.name;
+                element.description = task.description;
+                element.startdate = new Date(task.startdate).toISOString().split('T')[0];
+                element.enddate = new Date(task.enddate).toISOString().split('T')[0];
+                element.weight = task.weight;
+                element.require = task.require;
+                element.status = task.status;
+                element.employee = task.emailemployee;
+                setTasks(tasks => [...tasks, element]);
+            }
         });
     }, [idjob]);
-    const [team, setTeam] = React.useState(null);
     React.useEffect(() => {
-        getTeamById(job.assingedteam).then((data) => {
-            setTeam(data);
-        });
-    }, [job.assingedteam]);
+        if (job && job.assingedteam) {
+            getTeamById(job.assingedteam).then((data) => {
+                setTeam(data);
+            });
+        }
+    }, [job]);
 
     if (!job){
         return <p></p>;
@@ -72,7 +116,7 @@ function ViewJob(){
                 <Navbar />
                 <Box sx={{ p: 4 }}>
                     <ThemeProvider theme={theme}>
-                        <Typography variant="h4">Team {idteam}</Typography>
+                        <Typography variant="h4">Team {job.assingedteam}</Typography>
                         <p></p>
                         <Typography variant="body1">Members:</Typography>
                         <Box component="ul" sx={{ pl: 2 }}>
@@ -82,29 +126,83 @@ function ViewJob(){
                                         <TableRow>
                                             <TableCell>{member.email}</TableCell>
                                             <Skills member={member.email}/>
-                                            <TableCell align="right">
-                                                <Button
-                                                    variant="contained"
-                                                    size="small"
-                                                    sx={{
-                                                        backgroundColor: '#b23b3b',
-                                                        minWidth: 0,
-                                                        px: 1,
-                                                        alignSelf: "center"
-                                                    }}
-                                                    onClick={() => DeleteMember(idteam, member.email)}
-                                                >
-                                                    Delete Member
-                                                </Button>
-                                            </TableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
                             ))}
                         </Box>
-                        <AddMember addMember={addMember} setAddMember={setAddMember} teamId={idteam} />
-                        <br /><br />
-                        <Button variant="contained" onClick={()=> window.location.replace(`/create-job/${idteam}`)}>Create job</Button>
+                        <Typography variant="h5">Job {job.idjob}</Typography>
+                        <Typography variant="h6">{job.Jname}</Typography>
+                        <Typography variant="body1">{job.Jdescription}</Typography>
+                        <Typography variant="h6">Tasks:</Typography>
+                        <Box component="ul" sx={{ pl: 2 }}>
+                            <Table sx={{ minWidth: 300 }}>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Start Date</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>End Date</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Weight</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Requirements</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>Employee</TableCell>
+                                    </TableRow>
+                                    {tasks.map((task) => (
+                                    <TableRow>
+                                        <TableCell>{task.name}</TableCell>
+                                        <TableCell>{task.description}</TableCell>
+                                        <TableCell>{task.startdate}</TableCell>
+                                        <TableCell>{task.enddate}</TableCell>
+                                        <TableCell>{task.weight}</TableCell>
+                                        <TableCell>
+                                            {skills.map((skill) => (
+                                                task.require === skill.idskills ? (
+                                                    <span key={skill.idskills}>{skill.name} </span>
+                                                ) : null
+                                            ))
+                                            }
+                                        </TableCell>
+                                        <TableCell>{task.status}</TableCell>
+                                        {task.status === "completed" ? (
+                                            <TableCell>{task.employee}</TableCell>
+                                        ) : (
+                                            !task.employee ? (
+                                                <TableCell sx={{ maxWidth: 50, alignItems: 'center' }}>
+                                                    <TextField
+                                                        size="small"
+                                                        label="Assign Employee"
+                                                        variant="outlined"
+                                                        // value and onChange handlers should be implemented
+                                                    />
+                                                    <Button variant="contained" color="primary" size="small" sx={{ pl: 1, pr: 1, ml: 1, mt: 0.5 }}>
+                                                        Assign
+                                                    </Button>
+                                                </TableCell>
+                                            ) : (
+                                                <TableCell>
+                                                    {task.employee}
+                                                    <Button variant="contained" size="small" sx={{ backgroundColor: '#b23b3b', pl: 1, pr: 1, ml: 1, mt: 0.5 }}>
+                                                        Remove
+                                                    </Button>
+                                                </TableCell>
+                                            )
+                                        )}
+                                    </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Box>
+                        <Grid display="flex" justifyContent="center" sx={{ marginTop: "30px", mb: 10 }}>
+                            <Button
+                                type="submit"
+                                id="submit"
+                                variant="contained"
+                                size="large"
+                                onClick={() => Algorithm(idjob)}>
+                                Send to Auto Assign
+                            </Button>
+                        </Grid>
                     </ThemeProvider>
                 </Box>
                 <Footer />
@@ -116,7 +214,9 @@ function ViewJob(){
             <Navbar />
             <Box sx={{ p: 4 }}>
                 <ThemeProvider theme={theme}>
-                    <Typography variant="h4">Job {job.idjob}</Typography>
+                    <Typography variant="h5">Job {job.idjob}</Typography>
+                    <Typography variant="h6">{job.Jname}</Typography>
+                    <Typography variant="body1">{job.Jdescription}</Typography>
                 </ThemeProvider>
             </Box>
             <Footer />

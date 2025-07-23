@@ -7,16 +7,11 @@ app = Flask(__name__)
 
 @app.route('/algorithm', methods=['POST'])
 def algorithm():
-    print('Algorithm!', file=sys.stderr)
     data = request.get_json()
     employees = data['employees']
     tasks = data['tasks']
-    print(f'Employees: {employees}', file=sys.stderr)
-    print(f'Tasks: {tasks}', file=sys.stderr)
-    # tasks = data.get('tasks')
-    # result = customLoadBalance.customloadbalance(employees, tasks)
-    # return jsonify(result)
-    return tasks
+    result = customLoadBalance.customloadbalance(employees, tasks)
+    return jsonify(result)
 
 @app.route('/')
 def index():

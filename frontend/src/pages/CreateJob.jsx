@@ -92,7 +92,7 @@ function createJob(name, description, tasks, skills, idteam) {
     createTeamJob(job).then((response) => {
         if (response) {
             alert("Job created successfully!");
-            window.location.replace(`/dashboard`);
+            window.location.replace(`/view-job/${response.idjob}`);
         } else {
             alert("Failed to create job. Please try again.");
         }
