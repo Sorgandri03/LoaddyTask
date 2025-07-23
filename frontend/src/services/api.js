@@ -63,8 +63,8 @@ function getTeams() {
     return fetch(`${BASE_URL}/teams`, {
         method: "POST",
         body: JSON.stringify({
-            member : localStorage.getItem("user"),
-            role : localStorage.getItem("role")
+            member: localStorage.getItem("user"),
+            role: localStorage.getItem("role")
         }),
         headers: {
             "Content-Type": "application/json"
@@ -127,7 +127,7 @@ function createTeam(teamName, teamDescription) {
         });
 }
 
-function getSkills(){
+function getSkills() {
     return fetch(`${BASE_URL}/getskills`, {
         method: "POST",
         headers: {
@@ -148,8 +148,8 @@ function setSkills(skills) {
     return fetch(`${BASE_URL}/setskills`, {
         method: "POST",
         body: JSON.stringify({
-            employee : localStorage.getItem("user"),
-            skills : skills
+            employee: localStorage.getItem("user"),
+            skills: skills
         }),
         headers: {
             "Content-Type": "application/json"
@@ -298,5 +298,38 @@ function getEmployeeTasks(email, teamId) {
             return [];
         });
 }
-
-export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployeeSkills , addTeamMember , deleteTeamMember , createTeamJob , getJob , getTeamJobs, getEmployeeTasks };
+function taskcompleated(taskId) {
+    return fetch(`${BASE_URL}/taskcompleted`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ taskId })
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (!data || !data.success) {
+                throw new Error("Failed to mark task as completed");
+            }
+            console.log("Task marked as completed successfully");
+            return data.success;
+        });
+    }
+    function undotaskcompleated(taskId) {
+        return fetch(`${BASE_URL}/undotaskcompleted`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ taskId })
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (!data || !data.success) {
+                    throw new Error("Failed to mark task as not completed");
+                }
+                console.log("Task marked as not completed successfully");
+                return data.success;
+            });
+    }
+export { sendLogin, sendSignup, getTeams, getTeamById, createTeam, getSkills, setSkills, getEmployeeSkills, addTeamMember, deleteTeamMember, createTeamJob, getJob, getTeamJobs, getEmployeeTasks, taskcompleated, undotaskcompleated };

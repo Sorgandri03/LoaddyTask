@@ -8,6 +8,8 @@ import {
     getSkills,
     getTeamById,
     getTeamJobs,
+    taskcompleated,
+    undotaskcompleated,
     getEmployeeTasks
     
 } from "../services/api";
@@ -120,11 +122,42 @@ function EmployeeTasks(member){
             setTasks(data);
         });
     }, [member, idteam]);
+    const [checkedTasks, setCheckedTasks] = useState({});
+
+    const handleCheckboxChange = (taskId) => (event) => {
+        setCheckedTasks((prev) => ({
+            ...prev,
+            [taskId]: event.target.checked,
+        }));
+        if (event.target.checked) {
+            taskcompleated(taskId).then((response) => {
+                if (response) {
+                    alert("Task marked as completed");
+                } else {
+                    alert("Failed to mark task as completed");
+                }
+            });
+        } else {
+            undotaskcompleated(taskId).then((response) => {
+                if (response) {
+                    alert("Task marked as not completed");
+                } else {
+                    alert("Failed to mark task as not completed");
+                }
+            });
+        }
+    };
 
     return (
         <Box component="ul" sx={{ pl: 2 }}>
             {tasks.map((task) => (
-                <li key={task.idtask}>
+                <li key={task.idtask} style={{ display: "flex", alignItems: "center" }}>
+                    <input
+                        type="checkbox"
+                        checked={!!checkedTasks[task.idtask]}
+                        onChange={handleCheckboxChange(task.idtask)}
+                        style={{ marginRight: 8 }}
+                    />
                     <Typography variant="body1">{task.description}</Typography>
                 </li>
             ))}
@@ -233,7 +266,7 @@ function Team(){
                 <ThemeProvider theme={theme}>
                     <Typography variant="h4">Team {idteam}</Typography>
                     <p></p>
-                    <Typography variant="body1">Tasks:</Typography>
+                    <Typography variant="body1">Remaining Tasks:</Typography>
                     <EmployeeTasks member={localStorage.getItem("user")} />
                 </ThemeProvider>
             </Box>

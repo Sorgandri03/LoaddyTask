@@ -273,7 +273,7 @@ app.get('/api/tasks', async (req, res) => {
         const tasks = await sql`
             select t.* from task t
             join job j on t.job = j.idjob
-            where t.emailemployee = ${email} and j.assingedteam = ${teamId}
+            where t.emailemployee = ${email} and j.assingedteam = ${teamId} and t.status = 'assigned'
         `;
         res.json({ success: true, tasks: JSON.stringify(tasks) });
     } catch (error) {
@@ -281,7 +281,36 @@ app.get('/api/tasks', async (req, res) => {
         res.json({ success: false });
     }
 });
-
+app.post('/api/taskcompleted', async (req, res) => {
+    const { taskId } = req.body;
+    try {
+        const result = await sql`update task set status = 'completed' where idtask = ${taskId}`;
+        if (result) {
+            console.log('Task status updated successfully');
+            res.json({ success: true });
+        } else {
+            res.json({ success: false });
+        }
+    } catch (error) {
+        console.error('Error updating task status:', error);
+        res.json({ success: false });
+    }
+});
+app.post('/api/undotaskcompleted', async (req, res) => {
+    const { taskId } = req.body;
+    try {
+        const result = await sql`update task set status = 'assigned' where idtask = ${taskId}`;
+        if (result) {
+            console.log('Task status reverted successfully');
+            res.json({ success: true });
+        } else {
+            res.json({ success: false });
+        }
+    } catch (error) {
+        console.error('Error reverting task status:', error);
+        res.json({ success: false });
+    }
+});
 app.get('/api/test', async (req, res) => {
     if (result1 && result2) {
         const employees = JSON.stringify(result1);
