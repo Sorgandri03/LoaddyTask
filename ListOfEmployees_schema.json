@@ -2,9 +2,9 @@
     "type": "array",
     "items": {
         "type": "object",
-        "required": ["name","skills"],
+        "required": ["email","skills"],
         "properties": {
-            "name": {
+            "email": {
                 "type": "string"
             },
             "skills": {

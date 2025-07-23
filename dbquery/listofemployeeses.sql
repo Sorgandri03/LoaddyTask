@@ -1,10 +1,10 @@
 SELECT json_agg(json_build_object(
-    'name', name,
+    'email', email,
     'skills', skills
 )) AS result
 FROM (
     SELECT 
-        e.name,
+        e.email,
         array_agg(s.name ORDER BY s.name) AS skills
     FROM employee AS e
     JOIN have h ON e.email = h.emailEmployee
