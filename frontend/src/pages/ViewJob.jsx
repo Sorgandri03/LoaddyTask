@@ -1,14 +1,6 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
-import {
-    addTeamMember,
-    deleteTeamMember,
-    getEmployeeSkills,
-    getJob,
-    getSkills,
-    getTeamById,
-    getTeamJobs
-} from "../services/api";
+import {getEmployeeSkills, getJob, getSkills, getTeamById} from "../services/api";
 import {Navbar} from "../components/Navbar";
 import {Box, Button, TextField, ThemeProvider, Typography, Table, TableBody, TableRow, TableCell} from "@mui/material";
 import Footer from "../components/Footer";
@@ -19,60 +11,6 @@ const theme = createTheme({
         fontFamily: "Helvetica",
     },
 });
-
-function AddMember({ addMember, setAddMember, teamId }) {
-    const [member, setMember] = React.useState(null);
-
-    function sendAddMember(idteam, member) {
-        addTeamMember(idteam, member).then((response) => {
-            if (response) {
-                alert("Member added successfully");
-                window.location.reload();
-            } else {
-                alert("Failed to add member");
-            }
-        });
-    }
-
-    if (addMember) {
-        return (
-            <React.Fragment>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, maxWidth: 400, alignItems: "flex-start" }}>
-                    <br />
-                    <TextField
-                        id="member-email"
-                        label="Member Email"
-                        variant="outlined"
-                        type="text"
-                        value={member}
-                        onChange={(e) => setMember(e.target.value)}
-                    />
-                    <Button variant="contained" onClick={() => sendAddMember(teamId, member)}>
-                        Add Member
-                    </Button>
-                </Box>
-            </React.Fragment>
-        );
-    }
-    else {
-        return (
-            <Button variant="contained" onClick={() => setAddMember(true)}>
-                Add Member
-            </Button>
-        );
-    }
-}
-
-function DeleteMember(idteam, memberEmail) {
-    deleteTeamMember(idteam, memberEmail).then((response) => {
-        if (response) {
-            alert("Member deleted successfully");
-            window.location.reload();
-        } else {
-            alert("Failed to delete member");
-        }
-    });
-}
 
 function Skills(member) {
     const [employeeSkills, setEmployeeSkills] = React.useState([]);
@@ -109,50 +47,22 @@ function Skills(member) {
     );
 }
 
-function ViewJobs({ idteam }) {
-    const [jobs, setJobs] = React.useState([]);
-
+function ViewJob(){
+    const { idjob } = useParams();
+    const [job, setJob] = React.useState(null);
     React.useEffect(() => {
-        let isMounted = true;
-        getTeamJobs(idteam).then(async (response) => {
-            const jobPromises = response.map(async (job) => {
-                return job.idjob;
-            });
-            const jobsData = await Promise.all(jobPromises);
-            if (isMounted) setJobs(jobsData);
+        getJob(idjob).then((data) => {
+            setJob(data);
         });
-        return () => { isMounted = false; };
-    }, [idteam]);
-
-    return (
-        <>
-            {jobs.map((job) => (
-                <Box key={job} sx={{ mb: 2 }}>
-                    <Button
-                        variant="contained"
-                        size="small"
-                        sx={{ mt: 1 }}
-                        onClick={() => window.location.replace(`/view-job/${job}`)}
-                    >
-                        View Job {job}
-                    </Button>
-                </Box>
-            ))}
-        </>
-    );
-}
-
-function Team(){
-    const { idteam } = useParams();
-    const [addMember, setAddMember] = React.useState(false);
+    }, [idjob]);
     const [team, setTeam] = React.useState(null);
     React.useEffect(() => {
-        getTeamById(idteam).then((data) => {
+        getTeamById(job.assingedteam).then((data) => {
             setTeam(data);
         });
-    }, [idteam]);
+    }, [job.assingedteam]);
 
-    if (!team){
+    if (!job){
         return <p></p>;
     }
 
@@ -195,7 +105,6 @@ function Team(){
                         <AddMember addMember={addMember} setAddMember={setAddMember} teamId={idteam} />
                         <br /><br />
                         <Button variant="contained" onClick={()=> window.location.replace(`/create-job/${idteam}`)}>Create job</Button>
-                        <ViewJobs idteam={idteam} />
                     </ThemeProvider>
                 </Box>
                 <Footer />
@@ -207,7 +116,7 @@ function Team(){
             <Navbar />
             <Box sx={{ p: 4 }}>
                 <ThemeProvider theme={theme}>
-                    <Typography variant="h4">Team {idteam}</Typography>
+                    <Typography variant="h4">Job {job.idjob}</Typography>
                 </ThemeProvider>
             </Box>
             <Footer />
@@ -215,4 +124,4 @@ function Team(){
     );
 }
 
-export default Team;
+export default ViewJob;

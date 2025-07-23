@@ -228,29 +228,14 @@ function createTeamJob(job) {
     const name = job.name;
     const description = job.description;
     const tasks = job.tasks;
-    const idteam = job.idteam;
-    let employees = [];
-    getTeamById(idteam.idteam).then(team => {
-        if (!team || team.length === 0) {
-            throw new Error("Team not found");
-        }
-        for (const member of team) {
-            getEmployeeSkills(member.email).then((skills) => {
-                employees.push({
-                    email: member.email,
-                    skills: skills
-                });
-            })
-        }
-    });
-    return fetch(`${BASE_URL}/createjob`, {
+    const idteam = job.idteam.idteam;
+    return fetch(`${BASE_URL}/createteamjob`, {
         method: "POST",
         body: JSON.stringify({
             name: name,
             description: description,
             idteam: idteam,
-            tasks: tasks,
-            employees: employees
+            tasks: tasks
         }),
         headers: {
             "Content-Type": "application/json"
@@ -266,4 +251,38 @@ function createTeamJob(job) {
         });
 }
 
-export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployeeSkills , addTeamMember , deleteTeamMember , createTeamJob };
+function getJob(idjob) {
+    return fetch(`${BASE_URL}/job/${idjob}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch job");
+            }
+            return response.json().then((data) => {
+                return data ? data : [];
+            });
+        });
+}
+
+function getTeamJobs(idteam) {
+    return fetch(`${BASE_URL}/getteamjobs/${idteam}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch team jobs");
+            }
+            return response.json().then((data) => {
+                return data ? JSON.parse(data.jobs) : [];
+            });
+        });
+}
+
+export { sendLogin, sendSignup , getTeams , getTeamById , createTeam , getSkills , setSkills , getEmployeeSkills , addTeamMember , deleteTeamMember , createTeamJob , getJob , getTeamJobs };
