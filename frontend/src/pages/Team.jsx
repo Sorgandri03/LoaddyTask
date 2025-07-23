@@ -113,23 +113,26 @@ function Skills(member) {
         </>
     );
 }
-function EmployeeTasks(member){
+function EmployeeTasks(member) {
     const [tasks, setTasks] = useState([]);
     const { idteam } = useParams();
+    const [checkedTasks, setCheckedTasks] = useState({});
 
     useEffect(() => {
         getEmployeeTasks(member.member, idteam).then((data) => {
             setTasks(data);
         });
     }, [member, idteam]);
-    const [checkedTasks, setCheckedTasks] = useState({});
 
     const handleCheckboxChange = (taskId) => (event) => {
+        const isChecked = event.target.checked;
+
         setCheckedTasks((prev) => ({
             ...prev,
-            [taskId]: event.target.checked,
+            [taskId]: isChecked,
         }));
-        if (event.target.checked) {
+
+        if (isChecked) {
             taskcompleated(taskId).then((response) => {
                 if (response) {
                     alert("Task marked as completed");
@@ -150,20 +153,25 @@ function EmployeeTasks(member){
 
     return (
         <Box component="ul" sx={{ pl: 2 }}>
-            {tasks.map((task) => (
-                <li key={task.idtask} style={{ display: "flex", alignItems: "center" }}>
-                    <input
-                        type="checkbox"
-                        checked={!!checkedTasks[task.idtask]}
-                        onChange={handleCheckboxChange(task.idtask)}
-                        style={{ marginRight: 8 }}
-                    />
-                    <Typography variant="body1">{task.description}</Typography>
-                </li>
-            ))}
+            {tasks.length === 0 ? (
+                <Typography variant="body1">You don't have any task</Typography>
+            ) : (
+                tasks.map((task) => (
+                    <li key={task.idtask} style={{ display: "flex", alignItems: "center" }}>
+                        <input
+                            type="checkbox"
+                            checked={!!checkedTasks[task.idtask]}
+                            onChange={handleCheckboxChange(task.idtask)}
+                            style={{ marginRight: 8 }}
+                        />
+                        <Typography variant="body1">{task.description}</Typography>
+                    </li>
+                ))
+            )}
         </Box>
     );
 }
+
                     
 
 function ViewJobs({ idteam }) {
