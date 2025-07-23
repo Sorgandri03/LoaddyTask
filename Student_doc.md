@@ -52,9 +52,45 @@ The service is realized with a custom load balancing algorithm implemented in Py
 		
 	| HTTP METHOD | URL | Description | User Stories |
 	| ----------- | --- | ----------- | ------------ |
-    | GET | /algorithm TODO: ricontrollare il routing | run the algorithm | [3,4] |
+    | GET | /algorithm | run the algorithm | [3,4] |
 
-#### <other microservices>
+## CONTAINER_NAME: <name of the container>
+
+### DESCRIPTION: 
+container that allow us to run the microservice that provides notifications to employees about their tasks and deadlines.
+
+### USER STORIES:
+8
+
+### PORTS: 
+
+
+
+### PERSISTENCE EVALUATION
+The TODO: inserisci nome container does not include a database.
+
+### EXTERNAL SERVICES CONNECTIONS
+the microservice-algorithm container does not connect to external services.
+
+#### MICROSERVICE: <name of the microservice>
+- TYPE: backend
+- DESCRIPTION: service that provides notifications to employees about their tasks and deadlines.
+- PORTS: <ports to be published by the microservice>
+- TECHNOLOGICAL SPECIFICATION:
+<description of the technological aspect of the microservice>
+- SERVICE ARCHITECTURE: 
+<description of the architecture of the microservice>
+
+- ENDPOINTS: <put this bullet point only in the case of backend and fill the following table>
+		
+	| HTTP METHOD | URL | Description | User Stories |
+	| ----------- | --- | ----------- | ------------ |
+    | ... | ... | ... | ... |
+
+
+- DB STRUCTURE: <put this bullet point only in the case a DB is used in the microservice and specify the structure of the tables and columns>
+
+	**_<name of the table>_** :	| **_id_** | <other columns>
 
 ## <other containers>
 Student_doc.md
