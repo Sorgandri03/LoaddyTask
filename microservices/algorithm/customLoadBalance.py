@@ -1,19 +1,72 @@
 import sys
 import json
-ListOfEmployees = [
-    {"name": "bob", "skills": ["python", "java"]},
-    {"name": "alice", "skills": ["c++", "javascript", "python"]},
-    {"name": "charlie", "skills": ["java", "c++", "python"]}
+
+lsi = '''[
+  {
+    "email": "brandon.clark@example.com",
+    "skills": [
+      "C++",
+      "CSS",
+      "HTML",
+      "Java",
+      "JavaScript",
+      "PHP",
+      "Python",
+      "Ruby",
+      "SQL",
+      "Swift"
+    ]
+  }
+]'''
+
+tsk = '''[
+  {
+    "idTask": 2,
+    "language": "Python",
+    "weight": 0
+  },
+  {
+    "idTask": 3,
+    "language": "JavaScript",
+    "weight": 0
+  },
+  {
+    "idTask": 4,
+    "language": "C++",
+    "weight": 0
+  },
+  {
+    "idTask": 5,
+    "language": "SQL",
+    "weight": 0
+  },
+  {
+    "idTask": 6,
+    "language": "HTML",
+    "weight": 0
+  },
+  {
+    "idTask": 7,
+    "language": "CSS",
+    "weight": 0
+  },
+  {
+    "idTask": 8,
+    "language": "PHP",
+    "weight": 0
+  },
+  {
+    "idTask": 9,
+    "language": "Ruby",
+    "weight": 0
+  },
+  {
+    "idTask": 1,
+    "language": "Java",
+    "weight": 0
+  }
 ]
-
-
-tasksList = [
-    {"name": "task1", "language": "python", "weight": 3},
-    {"name": "task2", "language": "java", "weight": 3},
-    {"name": "task3", "language": "python", "weight": 2},
-    {"name": "task4", "language": "python", "weight": 4}
-]
-
+'''
 
 def customloadbalance(ListOfEmployees_json, tasksList_json):
     resault = []
@@ -33,14 +86,15 @@ def customloadbalance(ListOfEmployees_json, tasksList_json):
         candidates= [ employee for employee in ListOfEmployees if task["language"] in employee["skills"]]
     
         min_workload = min(candidates, key=lambda x: (x["workload"], len(x["skills"] )))
-        resault.append({"task": task["name"], "employee": min_workload["name"]})
+        resault.append({"task": task["idTask"], "emailemployee": min_workload["email"]})
         min_workload["workload"] += task["weight"]
 
     return resault
 
 
 if __name__ == "__main__":
-    res=customloadbalance(ListOfEmployees, tasksList)
+
+    res= customloadbalance(lsi, tsk)
     sys.stdout.write(str(res))
 
 

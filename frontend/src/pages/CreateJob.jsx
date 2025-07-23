@@ -62,6 +62,9 @@ function createTask(name, desc, endDate, weight, selected, prevTasks, setTask) {
     if( name === "" || desc === "" || endDate === "" || weight === 0 || selected.length === 0) {
         return;
     }
+    else if( new Date(endDate) < new Date()) {
+        return;
+    }
     let task = [];
     task.push(name);
     task.push(desc);
@@ -117,6 +120,10 @@ function AddTask(idteam) {
     const emptyTask = () => {
         if( name === "" || desc === "" || endDate === "" || weight === 0 || selected === "") {
             alert("Please fill all fields before adding a task.");
+            return;
+        }
+        else if( new Date(endDate) < new Date()) {
+            alert("End date cannot be in the past.");
             return;
         }
         setName("");

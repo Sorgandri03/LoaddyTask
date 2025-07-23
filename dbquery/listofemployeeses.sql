@@ -1,10 +1,10 @@
 SELECT json_agg(json_build_object(
-    'name', name,
+    'email', email,
     'skills', skills
 )) AS result
 FROM (
     SELECT 
-        e.name,
+        e.email,
         array_agg(s.name ORDER BY s.name) AS skills
     FROM employee AS e
     JOIN have h ON e.email = h.emailEmployee
@@ -13,5 +13,5 @@ FROM (
     JOIN team t ON pf.idTeam = t.idTeam
     JOIN job j ON t.idTeam = j.assingedTeam
     WHERE j.idjob = 1 -- job 1 to be replaced with a variable
-    GROUP BY e.name
+    GROUP BY e.email
 ) AS subquery;

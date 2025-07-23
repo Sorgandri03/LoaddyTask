@@ -62,6 +62,8 @@ app.post('/api/teams/:idteam', async (req, res) => {
     let checkMember;
     if (role === 'employee') {
         checkMember = await sql`select e.email from employee as e join partof as p on e.email = p.emailemployee join team as t on p.idteam = t.idteam where t.idteam = ${idteam} and e.email = ${member}`;
+        const employeeTasks = await sql`select * from task where emailemployee = ${member}`;
+        let tasksArray = employeeTasks.map(task => task);
     } else if (role === 'employer') {
         checkMember = await sql`select emailemployer from team where idteam = ${idteam} and emailemployer = ${member}`;
     } else {
@@ -102,18 +104,6 @@ app.get('/api/employee/:employee', async (req, res) => {
     else {
         res.json({success: false});
     }
-})
-
-app.get('/api/algorithm', async (req, res) => {
-    let options = {
-        mode: 'text',
-        pythonOptions: ['-u'],
-        args: req.query.q.split(",")
-    };
-
-    PythonShell.run('test.py', options).then(result=>{
-        res.json(result);
-    });
 })
 
 app.post('/test', async (req, res) => {
@@ -227,7 +217,7 @@ app.post('/api/deletemember', async (req, res) => {
     }
 });
 
-app.post('api/teamsjobs', async (req, res) => {
+app.post('/api/teamsjobs', async (req, res) => {
     const { idteam } = req.body;
     const result = await sql`select * from job where idteam = ${idteam}`;
     if (result) {
@@ -238,15 +228,103 @@ app.post('api/teamsjobs', async (req, res) => {
     }
 });
 
-app.post('/api/createjob', async (req, res) => {
-    const { idteam, name, description } = req.body;
-    const result = await sql`insert into job (idteam, name, description) values (${idteam}, ${name}, ${description}) returning idjob`;
+app.post('/api/createteamjob', async (req, res) => {
+    const { idteam, name, description, tasks } = req.body;
+    const result = await sql`insert into job (name, description, assingedteam) values (${name}, ${description}, ${idteam}) returning idjob`;
+    let today = new Date();
+    today = today.toISOString().split('T')[0];
+    const status = 'not assigned';
+    const email = null;
     if (result) {
+        for (const task of tasks) {
+            await sql`insert into task (name, description, startdate, enddate, weight, require, status, emailemployee, job) values (${task[0]}, ${task[1]}, ${today}, ${task[2]}, ${Number(task[4])}, ${task[3]}, ${status}, ${email}, ${result[0].idjob})`;
+        }
         res.json({success: true, idjob: result[0].idjob});
     } else {
         res.json({success: false});
     }   
 });
 
+app.get('/api/job/:idjob', async (req, res) => {
+    const { idjob } = req.params;
+    const result = await sql`select * from job j join task t on j.idjob = t.job where j.idjob = ${idjob} order by t.idtask`;
+    if (result) {
+        const job = JSON.stringify(result);
+        res.json({success: true, job: job});
+    } else {
+        res.json({success: false});
+    }
+})
+
+app.get('/api/getteamjobs/:idteam', async (req, res) => {
+    const { idteam } = req.params;
+    const result = await sql`select idjob from job where assingedteam = ${idteam}`;
+    if (result) {
+        const jobs = JSON.stringify(result);
+        res.json({success: true, jobs: jobs});
+    } else {
+        res.json({success: false});
+    }
+})
+
+app.get('/api/tasks', async (req, res) => {
+    const { email, teamId } = req.query;
+    try {
+        const tasks = await sql`
+            select t.* from task t
+            join job j on t.job = j.idjob
+            where t.emailemployee = ${email} and j.assingedteam = ${teamId} and t.status = 'assigned'
+        `;
+        res.json({ success: true, tasks: JSON.stringify(tasks) });
+    } catch (error) {
+        console.error('Error fetching employee tasks:', error);
+        res.json({ success: false });
+    }
+});
+app.post('/api/taskcompleted', async (req, res) => {
+    const { taskId } = req.body;
+    try {
+        const result = await sql`update task set status = 'completed' where idtask = ${taskId}`;
+        if (result) {
+            console.log('Task status updated successfully');
+            res.json({ success: true });
+        } else {
+            res.json({ success: false });
+        }
+    } catch (error) {
+        console.error('Error updating task status:', error);
+        res.json({ success: false });
+    }
+});
+app.post('/api/undotaskcompleted', async (req, res) => {
+    const { taskId } = req.body;
+    try {
+        const result = await sql`update task set status = 'assigned' where idtask = ${taskId}`;
+        if (result) {
+            console.log('Task status reverted successfully');
+            res.json({ success: true });
+        } else {
+            res.json({ success: false });
+        }
+    } catch (error) {
+        console.error('Error reverting task status:', error);
+        res.json({ success: false });
+    }
+});
+app.get('/api/test', async (req, res) => {
+    if (result1 && result2) {
+        const employees = JSON.stringify(result1);
+        const tasks = JSON.stringify(result2);
+        const algorithmResponse = await fetch('http://localhost:8000/algorithm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({employees: employees, tasks: tasks})
+        });
+        const algorithmResult = await algorithmResponse.json();
+        res.json({success: true, tasks: tasks});
+    } else {
+        res.json({success: false});
+    }
+});
 
 app.listen(3001, () => console.log('Server running on port 3001'));

@@ -3,10 +3,10 @@
   "type": "array",
   "items": {
     "type": "object",
-    "required": ["name", "language", "weight"],
+    "required": ["idTask", "language", "weight"],
     "properties": {
-      "name": {
-        "type": "string"
+      "idTask": {
+        "type": "integer"
       },
       "language": {
         "type": "string"

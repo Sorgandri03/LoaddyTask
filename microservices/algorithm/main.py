@@ -1,14 +1,26 @@
 from flask import Flask
+from flask import request
+import json
 import customLoadBalance
+import sys
 app = Flask(__name__)
 
-@app.route('/algorithm', methods=['GET'])
+@app.route('/algorithm', methods=['POST'])
 def algorithm():
-    return "Algorithm service is running!"
-    #return customLoadBalance.customloadbalance(ListOfEmployees, tasksList)
+    print('Algorithm!', file=sys.stderr)
+    data = request.get_json()
+    employees = data['employees']
+    tasks = data['tasks']
+    print(f'Employees: {employees}', file=sys.stderr)
+    print(f'Tasks: {tasks}', file=sys.stderr)
+    # tasks = data.get('tasks')
+    # result = customLoadBalance.customloadbalance(employees, tasks)
+    # return jsonify(result)
+    return tasks
 
 @app.route('/')
 def index():
+    print('Index!', file=sys.stderr)
     return """
     <!DOCTYPE html>
     <html>
