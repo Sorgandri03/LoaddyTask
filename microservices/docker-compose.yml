@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  algorithm-service:
+    container_name: algorithm-container
+    build:
+      context: ./algorithm
+    ports:
+      - "8000:8000"
+    networks:
+      - my-network
+
+networks:
+  my-network:
