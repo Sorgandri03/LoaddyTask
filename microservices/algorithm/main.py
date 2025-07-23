@@ -10,8 +10,8 @@ def algorithm():
     data = request.get_json()
     employees = data['employees']
     tasks = data['tasks']
-    result = customLoadBalance.customloadbalance(employees, tasks)
-    return jsonify(result)
+    result = json.dumps(customLoadBalance.customloadbalance(employees, tasks))
+    return result
 
 @app.route('/')
 def index():

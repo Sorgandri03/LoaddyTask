@@ -351,6 +351,7 @@ function sendToAlgorithm(idjob) {
                 throw new Error("Failed to send data to algorithm");
             }
             return response.json().then((data) => {
+                
                 return data ? JSON.parse(data) : [];
             });
         });

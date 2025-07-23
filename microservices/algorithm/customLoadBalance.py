@@ -68,10 +68,8 @@ tsk = '''[
 ]
 '''
 
-def customloadbalance(ListOfEmployees_json, tasksList_json):
-    resault = []
-    ListOfEmployees = json.loads(ListOfEmployees_json)
-    tasksList = json.loads(tasksList_json)
+def customloadbalance(ListOfEmployees, tasksList):
+    result = []
     for employee in range (len(ListOfEmployees)):
         ListOfEmployees[employee]["workload"] = 0
 
@@ -86,15 +84,10 @@ def customloadbalance(ListOfEmployees_json, tasksList_json):
         candidates= [ employee for employee in ListOfEmployees if task["language"] in employee["skills"]]
     
         min_workload = min(candidates, key=lambda x: (x["workload"], len(x["skills"] )))
-        resault.append({"task": task["idTask"], "emailemployee": min_workload["email"]})
+        result.append({"task": task["idTask"], "emailemployee": min_workload["email"]})
         min_workload["workload"] += task["weight"]
 
-    return resault
+    return result
 
-
-if __name__ == "__main__":
-
-    res= customloadbalance(lsi, tsk)
-    sys.stdout.write(str(res))
 
 

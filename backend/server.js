@@ -342,8 +342,13 @@ app.post('/api/algorithm', async (req, res) => {
     });
 
     const algorithmResult = await algorithmResponse.json();
-    console.log('Algorithm result:', algorithmResult);
-    //res.json({success: true, assignment: algorithmResult});
+    for (const task of algorithmResult) {
+    await sql`
+        UPDATE task 
+        SET emailEmployee = ${task.emailemployee}, status = 'assigned' 
+        WHERE idtask = ${task.task};
+    `;
+}
 });
 
 app.listen(3001, () => console.log('Server running on port 3001'));
