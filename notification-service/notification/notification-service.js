@@ -22,6 +22,7 @@ app.post('/api/notificate', async (req, res) => {
             e.email
         FROM task t
         JOIN employee e ON t.idemployee = e.idemployee
+        WHERE t.job = ${req.body.job}
     `;
     console.log(tasks)
     if (tasks.length === 0) {
