@@ -337,6 +337,7 @@ function undotaskcompleated(taskId) {
     }
 
 function sendToAlgorithm(idjob) {
+    console.log("Sending job to algorithm with ID:", idjob);
     return fetch(`${BASE_URL}/algorithm`, {
         method: "POST",
         body: JSON.stringify({
@@ -351,8 +352,7 @@ function sendToAlgorithm(idjob) {
                 throw new Error("Failed to send data to algorithm");
             }
             return response.json().then((data) => {
-                
-                return data ? JSON.parse(data) : [];
+                return true;
             });
         });
 }

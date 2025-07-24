@@ -347,8 +347,8 @@ app.post('/api/algorithm', async (req, res) => {
         UPDATE task 
         SET emailEmployee = ${task.emailemployee}, status = 'assigned' 
         WHERE idtask = ${task.task};
-    `;
-}
+    `;}
+    res.json({ success: true, result: algorithmResult });
 });
 
 app.listen(3001, () => console.log('Server running on port 3001'));
