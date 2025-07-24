@@ -8,7 +8,7 @@
     },
     {
         "set_id": 2,
-        "set_name": "<name of microservice>",
+        "set_name": "notification-service",
         "user_stories": 8,
         "links": [],
         "db": "false"
