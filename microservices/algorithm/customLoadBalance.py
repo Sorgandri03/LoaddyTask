@@ -81,9 +81,10 @@ def customloadbalance(ListOfEmployees, tasksList):
 # we sort the employess by the least workload and we use the number of skill that the employee has as a tie breaker 
 
     for task in tasksList:
-        candidates= [ employee for employee in ListOfEmployees if task["language"] in employee["skills"]]
-    
-        min_workload = min(candidates, key=lambda x: (x["workload"], len(x["skills"] )))
+        candidates = [employee for employee in ListOfEmployees if task["language"] in employee["skills"]]
+        if not candidates:
+          continue
+        min_workload = min(candidates, key=lambda x: (x["workload"], len(x["skills"])))
         result.append({"task": task["idTask"], "emailemployee": min_workload["email"]})
         min_workload["workload"] += task["weight"]
 
