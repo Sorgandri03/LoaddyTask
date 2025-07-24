@@ -132,7 +132,6 @@ function AddTask(idteam) {
         setWeight(0);
         setSelected("");
     }
-
     return (
         <React.Fragment>
             <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
@@ -205,11 +204,9 @@ function CreateJob(){
             setTeam(data);
         });
     }, [idteam]);
-
     if (!team){
         return <p></p>;
     }
-
     if (localStorage.getItem("role") === "employer") {
         return (
             <Box>

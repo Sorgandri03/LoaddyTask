@@ -1,6 +1,6 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
-import {getEmployeeSkills, getJob, getSkills, getTeamById, sendToAlgorithm, sendNotification    } from "../services/api";
+import {getEmployeeSkills, getJob, getSkills, getTeamById, sendToAlgorithm, sendNotification , assignTask} from "../services/api";
 import {Navbar} from "../components/Navbar";
 import {
     Box,
@@ -68,8 +68,37 @@ function Algorithm(idjob) {
         }
     });
 }
+
 function Notify(idjob) {
 
+}
+
+function updateTaskEmployee(idtask, email, team) {
+    if(email){
+        if (email && team.some(member => member.email === email)) {
+            assignTask(idtask, email).then((response) => {
+                if (response) {
+                    alert("Task assigned successfully");
+                    window.location.reload();
+                } else {
+                    alert("Failed to assign task");
+                }
+            });
+        }
+        else {
+            alert("Employee not found in the team");
+        }
+    }
+    else {
+        assignTask(idtask, email).then((response) => {
+            if (response) {
+                alert("Task assigned successfully");
+                window.location.reload();
+            } else {
+                alert("Failed to assign task");
+            }
+        });
+    }
 }
 
 function ViewJob(){
@@ -89,6 +118,7 @@ function ViewJob(){
             setJob(jobarray[0]);
             for (const task of jobarray) {
                 let element = [];
+                element.idtask = task.idtask;
                 element.name = task.name;
                 element.description = task.description;
                 element.startdate = new Date(task.startdate).toISOString().split('T')[0];
@@ -176,16 +206,44 @@ function ViewJob(){
                                                         size="small"
                                                         label="Assign Employee"
                                                         variant="outlined"
-                                                        // value and onChange handlers should be implemented
+                                                        value={task.assignEmail || ""}
+                                                        onChange={e => {
+                                                            const value = e.target.value;
+                                                            setTasks(tasks =>
+                                                                tasks.map(t =>
+                                                                    t === task ? { ...t, assignEmail: value } : t
+                                                                )
+                                                            );
+                                                        }}
                                                     />
-                                                    <Button variant="contained" color="primary" size="small" sx={{ pl: 1, pr: 1, ml: 1, mt: 0.5 }}>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        size="small"
+                                                        sx={{ pl: 1, pr: 1, ml: 1, mt: 0.5 }}
+                                                        onClick={() => {
+                                                            updateTaskEmployee(task.idtask, task.assignEmail || "", team);
+                                                        }}
+                                                    >
                                                         Assign
                                                     </Button>
                                                 </TableCell>
                                             ) : (
                                                 <TableCell>
                                                     {task.employee}
-                                                    <Button variant="contained" size="small" sx={{ backgroundColor: '#b23b3b', pl: 1, pr: 1, ml: 1, mt: 0.5 }}>
+                                                    <Button
+                                                        variant="contained"
+                                                        size="small"
+                                                        sx={{ backgroundColor: '#b23b3b', pl: 1, pr: 1, ml: 1, mt: 0.5 }}
+                                                        onClick={() => {
+                                                            setTasks(tasks =>
+                                                                tasks.map(t =>
+                                                                    t === task ? { ...t, employee: null } : t
+                                                                )
+                                                            );
+                                                            updateTaskEmployee(task.idtask, null, team);
+                                                        }}
+                                                    >
                                                         Remove
                                                     </Button>
                                                 </TableCell>

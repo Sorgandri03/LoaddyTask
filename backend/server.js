@@ -220,14 +220,14 @@ app.post('/api/teamsjobs', async (req, res) => {
 
 app.post('/api/createteamjob', async (req, res) => {
     const { idteam, name, description, tasks } = req.body;
-    const result = await sql`insert into job (name, description, assingedteam) values (${name}, ${description}, ${idteam}) returning idjob`;
+    const result = await sql`insert into job (Jname, Jdescription, assingedteam) values (${name}, ${description}, ${idteam}) returning idjob`;
     let today = new Date();
     today = today.toISOString().split('T')[0];
     const status = 'not assigned';
     const email = null;
     if (result) {
         for (const task of tasks) {
-            await sql`insert into task (name, description, startdate, enddate, weight, require, status, emailemployee, job) values (${task[0]}, ${task[1]}, ${today}, ${task[2]}, ${Number(task[4])}, ${task[3]}, ${status}, ${email}, ${result[0].idjob})`;
+            await sql`insert into task (name, description, startdate, enddate, weight, require, status, emailemployee, job) values (${task[0]}, ${task[1]}, ${today}, ${task[2]}, ${task[3]}, ${Number(task[4])}, ${status}, ${email}, ${result[0].idjob})`;
         }
         res.json({success: true, idjob: result[0].idjob});
     } else {
@@ -350,5 +350,38 @@ app.post('/api/algorithm', async (req, res) => {
     `;}
     res.json({ success: true, result: algorithmResult });
 });
+
+app.post('/api/updateTaskEmployee', async (req, res) => {
+    const { taskId, employeeEmail } = req.body;
+    if(employeeEmail === "null"){
+        const status = 'not assigned';
+        const employeeEmail = null;
+        try {
+            const result = await sql`update task set emailemployee = ${employeeEmail}, status = ${status} where idtask = ${taskId}`;
+            if (result) {
+                res.json({ success: true });
+            } else {
+                res.json({ success: false });
+            }
+        } catch (error) {
+            console.error('Error updating task employee:', error);
+            res.json({ success: false });
+        }
+    }
+    else{
+        const status = 'assigned';
+        try {
+            const result = await sql`update task set emailemployee = ${employeeEmail}, status = ${status} where idtask = ${taskId}`;
+            if (result) {
+                res.json({ success: true });
+            } else {
+                res.json({ success: false });
+            }
+        } catch (error) {
+            console.error('Error updating task employee:', error);
+            res.json({ success: false });
+        }
+    }
+})
 
 app.listen(3001, () => console.log('Server running on port 3001'));
