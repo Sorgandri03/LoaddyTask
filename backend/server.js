@@ -304,6 +304,39 @@ app.post('/api/undotaskcompleted', async (req, res) => {
     }
 });
 
+app.post('/api/updateTaskEmployee', async (req, res) => {
+    const { taskId, employeeEmail } = req.body;
+    if(employeeEmail === "null"){
+        const status = 'not assigned';
+        const employeeEmail = null;
+        try {
+            const result = await sql`update task set emailemployee = ${employeeEmail}, status = ${status} where idtask = ${taskId}`;
+            if (result) {
+                res.json({ success: true });
+            } else {
+                res.json({ success: false });
+            }
+        } catch (error) {
+            console.error('Error updating task employee:', error);
+            res.json({ success: false });
+        }
+    }
+    else{
+        const status = 'assigned';
+        try {
+            const result = await sql`update task set emailemployee = ${employeeEmail}, status = ${status} where idtask = ${taskId}`;
+            if (result) {
+                res.json({ success: true });
+            } else {
+                res.json({ success: false });
+            }
+        } catch (error) {
+            console.error('Error updating task employee:', error);
+            res.json({ success: false });
+        }
+    }
+})
+
 app.post('/api/algorithm', async (req, res) => {
     const { idjob } = req.body;
 
@@ -351,36 +384,31 @@ app.post('/api/algorithm', async (req, res) => {
     res.json({ success: true, result: algorithmResult });
 });
 
-app.post('/api/updateTaskEmployee', async (req, res) => {
-    const { taskId, employeeEmail } = req.body;
-    if(employeeEmail === "null"){
-        const status = 'not assigned';
-        const employeeEmail = null;
-        try {
-            const result = await sql`update task set emailemployee = ${employeeEmail}, status = ${status} where idtask = ${taskId}`;
-            if (result) {
-                res.json({ success: true });
-            } else {
-                res.json({ success: false });
-            }
-        } catch (error) {
-            console.error('Error updating task employee:', error);
-            res.json({ success: false });
-        }
+app.post('/api/sendNotification', async (req, res) => {
+    const { job } = req.body;
+    const tasks = await sql`
+        SELECT
+            t.idtask,
+            t.name,
+            t.description,
+            t.startdate,
+            t.enddate,
+            t.status,
+            t.emailemployee
+        FROM task t
+        WHERE t.job = ${job}
+    `;
+    const algorithmResponse = await fetch('http://localhost:9000/notificate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({tasks: tasks})
+    });
+    console.log(algorithmResponse);
+    if(algorithmResponse.ok){
+        return res.json({ success: true });
     }
     else{
-        const status = 'assigned';
-        try {
-            const result = await sql`update task set emailemployee = ${employeeEmail}, status = ${status} where idtask = ${taskId}`;
-            if (result) {
-                res.json({ success: true });
-            } else {
-                res.json({ success: false });
-            }
-        } catch (error) {
-            console.error('Error updating task employee:', error);
-            res.json({ success: false });
-        }
+        return res.json({ success: false });
     }
 })
 

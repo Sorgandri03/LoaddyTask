@@ -70,7 +70,14 @@ function Algorithm(idjob) {
 }
 
 function Notify(idjob) {
-
+    sendNotification(idjob).then((response) => {
+        if (response) {
+            alert("Notification sent successfully");
+            window.location.reload();
+        } else {
+            alert("Failed to send notification");
+        }
+    });
 }
 
 function updateTaskEmployee(idtask, email, team) {

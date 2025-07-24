@@ -14,7 +14,7 @@ services:
     build:
       context: ./notification
     ports:
-      - "3002:3002"
+      - "9000:9000"
     networks:
       - my-network
 

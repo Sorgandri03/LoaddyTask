@@ -381,4 +381,24 @@ function assignTask(taskId, employeeEmail) {
         });
 }
 
-export { sendLogin, sendSignup, getTeams, getTeamById, createTeam, getSkills, setSkills, getEmployeeSkills, addTeamMember, deleteTeamMember, createTeamJob, getJob, getTeamJobs, getEmployeeTasks, taskcompleated, undotaskcompleated , sendToAlgorithm , assignTask};
+function sendNotification(idjob) {
+    return fetch(`${BASE_URL}/sendnotification`, {
+        method: "POST",
+        body: JSON.stringify({
+            job: idjob
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to send notification");
+            }
+            return response.json().then((data) => {
+                return data.success;
+            });
+        });
+}
+
+export { sendLogin, sendSignup, getTeams, getTeamById, createTeam, getSkills, setSkills, getEmployeeSkills, addTeamMember, deleteTeamMember, createTeamJob, getJob, getTeamJobs, getEmployeeTasks, taskcompleated, undotaskcompleated , sendToAlgorithm , assignTask , sendNotification};

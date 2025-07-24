@@ -1,29 +1,15 @@
 import express, { response } from 'express';
 import cors from 'cors';
-import sql from './db.js';
 import nodemailer from 'nodemailer';
 
 
-const app = express();;
+const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3001' }));
 
-
-app.post('/api/notificate', async (req, res) => {
-    const tasks = await sql`
-        SELECT
-            t.idtask,
-            t.name,
-            t.description,
-            t.startdate,
-            t.enddate,
-            t.status,
-            e.email
-        FROM task t
-        JOIN employee e ON t.idemployee = e.idemployee
-        WHERE t.job = ${req.body.job}
-    `;
+app.post('/notificate', async (req, res) => {
+    const { tasks } = req.body;
     console.log(tasks)
     if (tasks.length === 0) {
         return res.status(200).send('No tasks for notifications');
@@ -41,7 +27,7 @@ app.post('/api/notificate', async (req, res) => {
         for (let task of tasks) {
             const mailOptions = {
                 from: 'loaddytask@gmail.com',
-                to: task.email,
+                to: task.emailemployee,
                 subject: `TASK: ${task.name}`,
                 text: `
                 You have a new task:
@@ -63,4 +49,4 @@ app.post('/api/notificate', async (req, res) => {
     }
 });
 
-app.listen(3002, () => console.log('Server running on port 3002'));
+app.listen(9000, () => console.log('Server running on port 9000'));
