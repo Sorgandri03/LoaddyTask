@@ -54,6 +54,24 @@ The service is realized with a custom load balancing algorithm implemented in Py
 	| ----------- | --- | ----------- | ------------ |
     | GET | /algorithm | run the algorithm | [3,4] |
 
+#### MICROSERVICE: Notifcation-service
+- TYPE: backend
+- DESCRIPTION: The Notification Service which notifies every users who assigned a task .
+- PORTS: 3002:3002
+- TECHNOLOGICAL SPECIFICATION:
+  This microservice is built using Node.js and Express. It exposes a RESTful API that notifies all users assigned to a task.
+
+- SERVICE ARCHITECTURE:
+  The service operates as a standalone microservice within the system architecture.
+
+
+- ENDPOINTS: <put this bullet point only in the case of backend and fill the following table>
+
+  | HTTP METHOD | URL              | Description                            | User Stories |
+  	|------------|------------------|----------------------------------------|--------------|
+  | POST | /api/notificate | notify developers that assigned a task | [6,7]        |
+
+
 ## CONTAINER_NAME: <name of the container>
 
 ### DESCRIPTION: 
