@@ -246,7 +246,7 @@ function createTeamJob(job) {
                 throw new Error("Failed to create job");
             }
             return response.json().then((data) => {
-                return data.success;
+                return data;
             });
         });
 }
@@ -357,4 +357,28 @@ function sendToAlgorithm(idjob) {
         });
 }
 
-export { sendLogin, sendSignup, getTeams, getTeamById, createTeam, getSkills, setSkills, getEmployeeSkills, addTeamMember, deleteTeamMember, createTeamJob, getJob, getTeamJobs, getEmployeeTasks, taskcompleated, undotaskcompleated , sendToAlgorithm };
+function assignTask(taskId, employeeEmail) {
+    if(!employeeEmail) {
+        employeeEmail = "null";
+    }
+    return fetch(`${BASE_URL}/updatetaskemployee`, {
+        method: "POST",
+        body: JSON.stringify({
+            taskId: taskId,
+            employeeEmail: employeeEmail
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Failed to update task employee");
+            }
+            return response.json().then((data) => {
+                return data.success;
+            });
+        });
+}
+
+export { sendLogin, sendSignup, getTeams, getTeamById, createTeam, getSkills, setSkills, getEmployeeSkills, addTeamMember, deleteTeamMember, createTeamJob, getJob, getTeamJobs, getEmployeeTasks, taskcompleated, undotaskcompleated , sendToAlgorithm , assignTask};
